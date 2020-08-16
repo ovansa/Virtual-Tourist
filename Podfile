@@ -4,8 +4,6 @@
 target 'Virtual Tourist' do
   # Comment the next line if you don't want to use dynamic frameworks
   use_frameworks!
-  
-  pod 'GoogleMaps', '~>3.7.0'
 
   # Pods for Virtual Tourist
 

@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 51;
+	objectVersion = 50;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -15,6 +15,10 @@
 		0B16ED3424E441BB00C251C3 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0B16ED3224E441BB00C251C3 /* LaunchScreen.storyboard */; };
 		0B16ED3C24E4708400C251C3 /* MapScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B16ED3B24E4708400C251C3 /* MapScreen.swift */; };
 		0B16ED3E24E56C3200C251C3 /* PhotoAlbum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B16ED3D24E56C3200C251C3 /* PhotoAlbum.swift */; };
+		0BD76F3924E888E7008445D5 /* Photos.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BD76F3824E888E7008445D5 /* Photos.swift */; };
+		0BD76F3B24E891F3008445D5 /* Requests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BD76F3A24E891F3008445D5 /* Requests.swift */; };
+		0BD76F4924E89E3E008445D5 /* PhotoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BD76F4724E89E3E008445D5 /* PhotoCell.swift */; };
+		0BD76F4A24E89E3E008445D5 /* PhotoCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0BD76F4824E89E3E008445D5 /* PhotoCell.xib */; };
 		24A8F9E4506C0AF631E6D98D /* Pods_Virtual_Tourist.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 35E4110FFDE29D53C009FA07 /* Pods_Virtual_Tourist.framework */; };
 /* End PBXBuildFile section */
 
@@ -29,6 +33,10 @@
 		0B16ED3524E441BB00C251C3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0B16ED3B24E4708400C251C3 /* MapScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = MapScreen.swift; path = "/Users/ovansa/Documents/iOS/Virtual Tourist/Virtual Tourist/MapScreen.swift"; sourceTree = "<absolute>"; };
 		0B16ED3D24E56C3200C251C3 /* PhotoAlbum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoAlbum.swift; sourceTree = "<group>"; };
+		0BD76F3824E888E7008445D5 /* Photos.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Photos.swift; path = "/Users/ovansa/Documents/iOS/Virtual Tourist/Virtual Tourist/Photos.swift"; sourceTree = "<absolute>"; };
+		0BD76F3A24E891F3008445D5 /* Requests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Requests.swift; sourceTree = "<group>"; };
+		0BD76F4724E89E3E008445D5 /* PhotoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoCell.swift; sourceTree = "<group>"; };
+		0BD76F4824E89E3E008445D5 /* PhotoCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PhotoCell.xib; sourceTree = "<group>"; };
 		2F22D364E4A373F7D4E3F6D7 /* Pods-Virtual Tourist.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Virtual Tourist.debug.xcconfig"; path = "Target Support Files/Pods-Virtual Tourist/Pods-Virtual Tourist.debug.xcconfig"; sourceTree = "<group>"; };
 		35E4110FFDE29D53C009FA07 /* Pods_Virtual_Tourist.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Virtual_Tourist.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		EC877080984D3DCCA254DB62 /* Pods-Virtual Tourist.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Virtual Tourist.release.xcconfig"; path = "Target Support Files/Pods-Virtual Tourist/Pods-Virtual Tourist.release.xcconfig"; sourceTree = "<group>"; };
@@ -67,15 +75,19 @@
 		0B16ED2324E441BA00C251C3 /* Virtual Tourist */ = {
 			isa = PBXGroup;
 			children = (
+				0BD76F3824E888E7008445D5 /* Photos.swift */,
 				0B16ED3B24E4708400C251C3 /* MapScreen.swift */,
 				0B16ED2424E441BA00C251C3 /* AppDelegate.swift */,
 				0B16ED2624E441BA00C251C3 /* SceneDelegate.swift */,
 				0B16ED2A24E441BA00C251C3 /* Main.storyboard */,
 				0B16ED3D24E56C3200C251C3 /* PhotoAlbum.swift */,
+				0BD76F3A24E891F3008445D5 /* Requests.swift */,
 				0B16ED3024E441BB00C251C3 /* Assets.xcassets */,
 				0B16ED3224E441BB00C251C3 /* LaunchScreen.storyboard */,
 				0B16ED3524E441BB00C251C3 /* Info.plist */,
 				0B16ED2D24E441BA00C251C3 /* Virtual_Tourist.xcdatamodeld */,
+				0BD76F4724E89E3E008445D5 /* PhotoCell.swift */,
+				0BD76F4824E89E3E008445D5 /* PhotoCell.xib */,
 			);
 			path = "Virtual Tourist";
 			sourceTree = "<group>";
@@ -108,7 +120,6 @@
 				0B16ED1D24E441BA00C251C3 /* Sources */,
 				0B16ED1E24E441BA00C251C3 /* Frameworks */,
 				0B16ED1F24E441BA00C251C3 /* Resources */,
-				8E1BD38A2B1335C3A9A7C080 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -157,6 +168,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0BD76F4A24E89E3E008445D5 /* PhotoCell.xib in Resources */,
 				0B16ED3424E441BB00C251C3 /* LaunchScreen.storyboard in Resources */,
 				0B16ED3124E441BB00C251C3 /* Assets.xcassets in Resources */,
 				0B16ED2C24E441BA00C251C3 /* Main.storyboard in Resources */,
@@ -166,23 +178,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		8E1BD38A2B1335C3A9A7C080 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Virtual Tourist/Pods-Virtual Tourist-resources-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Copy Pods Resources";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Virtual Tourist/Pods-Virtual Tourist-resources-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Virtual Tourist/Pods-Virtual Tourist-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 		D020E38E59AD77144A562449 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -212,10 +207,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0BD76F3924E888E7008445D5 /* Photos.swift in Sources */,
 				0B16ED3C24E4708400C251C3 /* MapScreen.swift in Sources */,
 				0B16ED3E24E56C3200C251C3 /* PhotoAlbum.swift in Sources */,
 				0B16ED2F24E441BA00C251C3 /* Virtual_Tourist.xcdatamodeld in Sources */,
+				0BD76F4924E89E3E008445D5 /* PhotoCell.swift in Sources */,
 				0B16ED2524E441BA00C251C3 /* AppDelegate.swift in Sources */,
+				0BD76F3B24E891F3008445D5 /* Requests.swift in Sources */,
 				0B16ED2724E441BA00C251C3 /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
