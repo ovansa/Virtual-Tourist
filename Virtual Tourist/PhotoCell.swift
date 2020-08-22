@@ -17,9 +17,16 @@ class PhotoCell: UICollectionViewCell {
         }
     }
     
+    func configures(image: String) {
+        let document = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+        
+        let imagePath = document.appendingPathComponent(image)
+        self.photoImageView.image = UIImage(contentsOfFile: imagePath.path)
+    }
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
     }
-
+    
 }

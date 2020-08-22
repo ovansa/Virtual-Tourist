@@ -22,10 +22,10 @@
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <constraints>
-                            <constraint firstItem="ZG0-Xx-Ngh" firstAttribute="top" secondItem="yap-xM-lGI" secondAttribute="top" id="268-bL-xuT"/>
-                            <constraint firstItem="ZG0-Xx-Ngh" firstAttribute="leading" secondItem="yap-xM-lGI" secondAttribute="leading" id="HkB-Eq-BT0"/>
-                            <constraint firstItem="yap-xM-lGI" firstAttribute="bottom" secondItem="ZG0-Xx-Ngh" secondAttribute="bottom" id="ocv-40-j9g"/>
-                            <constraint firstItem="ZG0-Xx-Ngh" firstAttribute="trailing" secondItem="yap-xM-lGI" secondAttribute="trailing" id="ozC-VG-v2c"/>
+                            <constraint firstItem="ZG0-Xx-Ngh" firstAttribute="top" secondItem="yap-xM-lGI" secondAttribute="top" id="5V2-YB-fPD"/>
+                            <constraint firstItem="ZG0-Xx-Ngh" firstAttribute="leading" secondItem="yap-xM-lGI" secondAttribute="leading" id="Ceo-hk-0GB"/>
+                            <constraint firstItem="ZG0-Xx-Ngh" firstAttribute="trailing" secondItem="yap-xM-lGI" secondAttribute="trailing" id="PNF-lt-h8y"/>
+                            <constraint firstItem="yap-xM-lGI" firstAttribute="bottom" secondItem="ZG0-Xx-Ngh" secondAttribute="bottom" id="ZPF-mX-0zJ"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="yap-xM-lGI"/>
                     </view>
@@ -39,7 +39,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="8VE-Dv-zcp" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1200" y="104"/>
+            <point key="canvasLocation" x="1198.5507246376812" y="103.79464285714285"/>
         </scene>
         <!--Photo Album-->
         <scene sceneID="fVJ-iE-7Ps">
@@ -104,6 +104,9 @@
                                     <constraint firstAttribute="height" constant="55" id="dVT-pH-5Wm"/>
                                 </constraints>
                                 <state key="normal" title="New Collection"/>
+                                <connections>
+                                    <action selector="newCollection:" destination="nBO-CY-rgf" eventType="touchUpInside" id="AmD-MM-Dy4"/>
+                                </connections>
                             </button>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
@@ -124,6 +127,7 @@
                     <navigationItem key="navigationItem" id="3F7-jC-b0f"/>
                     <connections>
                         <outlet property="albumMapView" destination="cV7-E3-Yc7" id="VW7-Cx-Re1"/>
+                        <outlet property="btnNewCollection" destination="890-rx-8aU" id="ews-La-b5s"/>
                         <outlet property="collectionView" destination="Rug-30-3hC" id="apn-0f-LJj"/>
                     </connections>
                 </viewController>

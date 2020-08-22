@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import CoreData
 
 class Requests {
     static let shared = Requests()
@@ -23,14 +24,14 @@ class Requests {
         
         urlString.queryItems = [
             URLQueryItem(name: "method", value: "flickr.photos.search"),
-            URLQueryItem(name: "api_key", value: "c9f2ed0c550e444fe4df3c0c1374632c"),
+            URLQueryItem(name: "api_key", value: "d2f8674bbf96cb652663f7eeba742af0"),
             URLQueryItem(name: "privacy_filter", value: "1"),
             URLQueryItem(name: "lat", value: latitude),
             URLQueryItem(name: "lon", value: longitude),
             URLQueryItem(name: "format", value: "json"),
             URLQueryItem(name: "nojsoncallback", value: "1")
         ]
-    
+        
         let request = URLRequest(url: urlString.url!)
         
         session.dataTask(with: request) { (data, response, error) in
@@ -38,9 +39,6 @@ class Requests {
                 do {
                     let photoData = try JSONDecoder().decode(PhotosBody.self, from: data)
                     let photos = photoData.photos.photo
-//                    for photo in photos {
-//                        print(photo.secret)
-//                    }
                     DispatchQueue.main.async {
                         successBloc(photos)
                     }
@@ -56,12 +54,54 @@ class Requests {
         
         session.dataTask(with: url) { (data, response, error) in
             guard let data = data,
-            let image = UIImage(data: data)
-            else { return }
+                let image = UIImage(data: data)
+                else { return }
             
             DispatchQueue.main.async {
                 successBlock(image)
             }
         }.resume()
+    }
+    
+    func isImageTitleAvailable(basedOn val: String, isEmpty: @escaping (Bool) -> Void) {
+        let savedImageData: NSFetchRequest<Images> = Images.fetchRequest()
+        let savedImages: [Images]
+        do {
+            let saved = try Persistence.context.fetch(savedImageData)
+            savedImages = saved
+            
+            let result = savedImages.filter{ $0.name == val }
+            
+            isEmpty(result.isEmpty)
+            
+        } catch {}
+    }
+    
+    func getImagesFromStorage(basedOn val: String, images: @escaping ([String]) -> Void) {
+        let savedImageData: NSFetchRequest<Images> = Images.fetchRequest()
+        var theSavedImages = [Images]()
+        do {
+            let saved = try Persistence.context.fetch(savedImageData)
+            theSavedImages = saved
+            
+            let result = theSavedImages.filter{$0.name == val}
+            
+            images(result[0].imageList!)
+            
+        } catch {}
+    }
+    
+    func isImageTitleEmpty(basedOn val: String, isEmpty: @escaping (Bool) -> Void) {
+        let savedImageData: NSFetchRequest<Images> = Images.fetchRequest()
+        var theSavedImages = [Images]()
+        do {
+            let saved = try Persistence.context.fetch(savedImageData)
+            theSavedImages = saved
+            
+            let result = theSavedImages.filter{$0.name == val}
+            
+            isEmpty(result.isEmpty)
+            
+        } catch {}
     }
 }
