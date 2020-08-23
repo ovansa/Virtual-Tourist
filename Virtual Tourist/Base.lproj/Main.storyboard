@@ -17,15 +17,28 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="ZG0-Xx-Ngh">
-                                <rect key="frame" x="0.0" y="88" width="414" height="774"/>
+                                <rect key="frame" x="0.0" y="88" width="414" height="756"/>
                             </mapView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NDd-p1-rty">
+                                <rect key="frame" x="0.0" y="844" width="414" height="52"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="52" id="WZu-Co-lBu"/>
+                                </constraints>
+                                <state key="normal" title="Button"/>
+                                <connections>
+                                    <action selector="deleteLocation:" destination="AcN-20-3Uw" eventType="touchUpInside" id="Kiu-pU-0ou"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <constraints>
                             <constraint firstItem="ZG0-Xx-Ngh" firstAttribute="top" secondItem="yap-xM-lGI" secondAttribute="top" id="5V2-YB-fPD"/>
+                            <constraint firstItem="yap-xM-lGI" firstAttribute="trailing" secondItem="NDd-p1-rty" secondAttribute="trailing" id="744-vs-YkX"/>
                             <constraint firstItem="ZG0-Xx-Ngh" firstAttribute="leading" secondItem="yap-xM-lGI" secondAttribute="leading" id="Ceo-hk-0GB"/>
+                            <constraint firstItem="NDd-p1-rty" firstAttribute="top" secondItem="ZG0-Xx-Ngh" secondAttribute="bottom" id="G3l-9K-0tm"/>
+                            <constraint firstAttribute="bottom" secondItem="NDd-p1-rty" secondAttribute="bottom" id="LPc-Qu-lgw"/>
                             <constraint firstItem="ZG0-Xx-Ngh" firstAttribute="trailing" secondItem="yap-xM-lGI" secondAttribute="trailing" id="PNF-lt-h8y"/>
-                            <constraint firstItem="yap-xM-lGI" firstAttribute="bottom" secondItem="ZG0-Xx-Ngh" secondAttribute="bottom" id="ZPF-mX-0zJ"/>
+                            <constraint firstItem="NDd-p1-rty" firstAttribute="leading" secondItem="yap-xM-lGI" secondAttribute="leading" id="cCU-a2-3YI"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="yap-xM-lGI"/>
                     </view>
@@ -39,7 +52,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="8VE-Dv-zcp" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1198.5507246376812" y="103.79464285714285"/>
+            <point key="canvasLocation" x="1190" y="104"/>
         </scene>
         <!--Photo Album-->
         <scene sceneID="fVJ-iE-7Ps">
@@ -133,7 +146,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="bHF-YD-TIG" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2024.6376811594205" y="103.79464285714285"/>
+            <point key="canvasLocation" x="2025" y="104"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="FXG-5g-vfE">

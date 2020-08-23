@@ -104,4 +104,31 @@ class Requests {
             
         } catch {}
     }
+    
+    func getOneSavedImage(with name: String, images: [String]) {
+        let fetchImages: NSFetchRequest<Images> = Images.fetchRequest()
+        fetchImages.predicate = NSPredicate(format: "name = %@", name)
+        
+        do {
+            let result = try Persistence.context.fetch(fetchImages)
+            if result.count != 0 {
+                print("There are some results")
+                print(result[0].imageList!)
+                result[0].setValue(images, forKey: "imageList")
+                print("------- After replacing image -------")
+                print(result[0].imageList!)
+            } else {
+                print("No result")
+            }
+        } catch { }
+    }
+    
+    func deleteLocationData() {
+        let fetchRequest: NSFetchRequest<NSFetchRequestResult> = NSFetchRequest(entityName: "Images")
+        let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
+
+        do {
+            try Persistence.context.execute(deleteRequest)
+        } catch { }
+    }
 }

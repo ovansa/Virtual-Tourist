@@ -10,33 +10,42 @@ import UIKit
 import MapKit
 import CoreData
 
+
 class PhotoAlbum: UIViewController {
     @IBOutlet weak var albumMapView: MKMapView!
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var btnNewCollection: UIButton!
-    @IBAction func newCollection(_ sender: Any) {
-        print("--------------------------------------------")
-    }
-    
     
     var annotationSegue: MKAnnotationView!
-    
     let locationManager = CLLocationManager()
-    
     var collectionViewFlowLayout: UICollectionViewFlowLayout!
-    
     let photoIdentifier = "PhotoCell"
-    
     var photos = [Photo]()
-    
     var savedImages = [String]()
-    //    var savedIms: [String] = ["50250867232.jpg", "50250024693.jpg", "50250673466.jpg", "50250678002.jpg", "50250675036.jpg"]
-    
     var isImage: Bool = false
-    
     var photoDirUrl = [String]()
-    
     var longLat: String!
+    
+    @IBAction func newCollection(_ sender: Any) {
+        let longitude = annotationSegue.annotation!.coordinate.longitude
+        let latitude = annotationSegue.annotation!.coordinate.latitude
+        
+        self.btnNewCollection.isEnabled = false
+        
+        
+        Requests.shared.getImageDataFromLocation(lat: latitude, lon: longitude) { (response) in
+            self.photos = Array(response[0..<5])
+            self.getImagesFromUrl(from: self.photos) { (pictures) in
+                print("Fetching data once again")
+                Requests.shared.getOneSavedImage(with: self.longLat, images: pictures)
+                self.btnNewCollection.isEnabled = true
+                self.savedImages = pictures
+                print("Printing pictures --------- ")
+                print(pictures)
+                self.collectionView.reloadData()
+            }
+        }
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -49,9 +58,9 @@ class PhotoAlbum: UIViewController {
         let latString = String(latitude)
         
         self.longLat = longString + latString
-        //        print(annotationSegue.annotation!.coordinate.latitude)
-        btnNewCollection.isEnabled = false
         
+        btnNewCollection.isEnabled = false
+      
         Requests.shared.isImageTitleEmpty(basedOn: self.longLat) { (empty) in
             if empty {
                 self.isImage = empty
@@ -62,7 +71,9 @@ class PhotoAlbum: UIViewController {
                         images.name = self.longLat
                         images.imageList = pictures
                         Persistence.saveContext()
+                        self.savedImages = pictures
                         self.btnNewCollection.isEnabled = true
+                        //                        self.getOneSavedImage(with: self.longLat, images: pictures)
                     }
                     
                     self.collectionView.reloadData()
@@ -71,7 +82,7 @@ class PhotoAlbum: UIViewController {
                 self.isImage = empty
                 Requests.shared.getImagesFromStorage(basedOn: self.longLat) { (images) in
                     self.savedImages = images
-                    print(self.savedImages)
+                    //                    print(self.savedImages)
                     self.btnNewCollection.isEnabled = true
                 }
                 
@@ -80,14 +91,10 @@ class PhotoAlbum: UIViewController {
         
         anotation.coordinate = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
         albumMapView.addAnnotation(anotation)
-        
         let myLocation = CLLocation(latitude: latitude, longitude: longitude)
         
         centerViewOnLocation(location: myLocation)
-        
         setUpCollectionView()
-        
-        
     }
     
     func getImagesFromUrl(from arr: [Photo], photoGotten: @escaping ([String]) -> Void) {
@@ -108,18 +115,7 @@ class PhotoAlbum: UIViewController {
         }
     }
     
-    func getASavedImage() {
-        let savedImageData: NSFetchRequest<Images> = Images.fetchRequest()
-        var theSavedImages = [Images]()
-        do {
-            let saved = try Persistence.context.fetch(savedImageData)
-            theSavedImages = saved
-            print(theSavedImages[0].imageList!)
-        } catch {}
-    }
-    
     func saveImageInDirectory(imageName img: String, image: UIImage) -> String {
-        // Get the location of the document directory
         let document = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
         let imgName = img+".jpg"
         let url = document.appendingPathComponent(imgName)
@@ -187,7 +183,7 @@ extension PhotoAlbum: UICollectionViewDelegate, UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: photoIdentifier, for: indexPath) as! PhotoCell
-        if isImage == false{
+        if isImage == false {
             cell.configures(image: savedImages[indexPath.item])
             print("Cofiguring from local storage")
         } else {
@@ -195,5 +191,17 @@ extension PhotoAlbum: UICollectionViewDelegate, UICollectionViewDataSource {
             print("Cofiguring from internat image")
         }
         return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        // 1. Select the image to delete
+        // 2. Get the image name
+        // 3. Retrieve the image array that contains this image
+        // 4. Delete this image from the image array
+        // 5. Reload the collectionView
+        collectionView.deleteItems(at: [indexPath])
+        savedImages.remove(at: indexPath.item)
+        print(indexPath)
+        Requests.shared.getOneSavedImage(with: self.longLat, images: savedImages)
     }
 }

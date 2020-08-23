@@ -14,31 +14,9 @@ class MapScreen: UIViewController {
     @IBOutlet weak var mapView: MKMapView!
     let defaults = UserDefaults.standard
     
-    // Get camera zoom level
-    private var zoom : Float = -1 // saved zoom value
-    private var rotation : Double = 0
-    
-    //    public func getZoom() -> Double {
-    //        var cameraAngle = self.rotation
-    //
-    //        if cameraAngle >= 270 {
-    //            cameraAngle = 360 - cameraAngle
-    //        } else if cameraAngle > 90 {
-    //            cameraAngle = fabs(cameraAngle - 180)
-    //        }
-    //
-    //        let angleRad = M_PI * cameraAngle / 180
-    //        let width = Double(mapView.frame.size.width)
-    //        let height = Double(mapView.frame.size.height)
-    //        let heightOffset: Double = 20
-    //
-    //
-    //        //let spanStraight = (width * self.mapView.span.longitudeDelta) / ((width * cos(angleRad)) + (height - heightOffset) * sin(angleRad))
-    //        return log2(360 * ((width / 128)))
-    //    }
-    
-    
-    
+    @IBAction func deleteLocation(_ sender: Any) {
+        Requests.shared.deleteLocationData()
+    }
     let imageSegueIdentifier = "imageViewSegue"
     
     var centerOfMapView: CLLocationCoordinate2D!
@@ -53,52 +31,49 @@ class MapScreen: UIViewController {
         longPresGestureRecog.minimumPressDuration = 2.0
         self.mapView.addGestureRecognizer(longPresGestureRecog)
         
+        let centerLocationIsAvailable = defaults.object(forKey: "centeredLatitude") != nil && defaults.object(forKey: "centeredLatitude") != nil
+        
         getLocations { (locations) in
             if locations.isEmpty {
                 let anotation1 = MKPointAnnotation()
                 anotation1.title = "Eiffel Tower"
                 anotation1.coordinate = CLLocationCoordinate2D(latitude: 48.858372, longitude: 2.294481)
-                self.saveLocation(latitude: 48.858372, longitude: 2.294481)
+                
                 self.mapView.addAnnotation(anotation1)
                 let anotation2 = MKPointAnnotation()
                 anotation2.title = "Kilimanjaro"
                 anotation2.coordinate = CLLocationCoordinate2D(latitude: 27.175014, longitude: 78.042152)
                 self.mapView.addAnnotation(anotation2)
                 
-                let centerLocation = CLLocation(latitude: 48.858372, longitude: 2.294481)
-                self.centerViewOnLocation(location: centerLocation)
+                if centerLocationIsAvailable {
+                    let centerLocation = CLLocation(latitude: self.defaults.double(forKey: "centeredLatitude"), longitude: self.defaults.double(forKey: "centeredLongitude"))
+                    self.saveLocation(latitude: self.defaults.double(forKey: "centeredLatitude"), longitude: self.defaults.double(forKey: "centeredLongitude")
+                    )
+                    self.centerViewOnLocation(location: centerLocation)
+                } else {
+                    let centerLocation = CLLocation(latitude: 48.858372, longitude: 2.294481)
+                    self.saveLocation(latitude: self.defaults.double(forKey: "centeredLatitude"), longitude: self.defaults.double(forKey: "centeredLongitude")
+                    )
+                    self.centerViewOnLocation(location: centerLocation)
+                }
+                
                 
                 let zoomRange = MKMapView.CameraZoomRange(maxCenterCoordinateDistance: 200000)
                 self.mapView.setCameraZoomRange(zoomRange, animated: true)
-
+                
             } else {
                 for location in locations {
                     let annotation = MKPointAnnotation()
                     annotation.coordinate = CLLocationCoordinate2D(latitude: location.latitude, longitude: location.longitude)
                     self.mapView.addAnnotation(annotation)
                 }
-                let centerLocation = CLLocation(latitude: locations[0].latitude, longitude: locations[0].longitude)
+                let centerLocation = CLLocation(latitude: self.defaults.double(forKey: "centeredLatitude"), longitude: self.defaults.double(forKey: "centeredLongitude"))
                 self.centerViewOnLocation(location: centerLocation)
                 
                 let zoomRange = MKMapView.CameraZoomRange(maxCenterCoordinateDistance: 200000)
                 self.mapView.setCameraZoomRange(zoomRange, animated: true)
             }
         }
-        
-        print(defaults.object(forKey: "centeredLatitude") == nil && defaults.object(forKey: "centeredLongitude") == nil)
-        print(defaults.object(forKey: "centeredLongitude") == nil)
-        print(defaults.double(forKey: "centeredLatitude"))
-        print(defaults.double(forKey: "centeredLongitude"))
-        
-        //        if defaults.object(forKey: "centeredLatitude") != nil {
-        //            let centeredLatitude = defaults.double(forKey: "centeredLatitude")
-        //            let centeredLongitude = defaults.double(forKey: "centeredLongitude")
-        //            let centerLocation = CLLocation(latitude: centeredLatitude, longitude: centeredLongitude)
-        //            centerViewOnLocation(location: centerLocation)
-        //        } else {
-        //            let centerLocation = CLLocation(latitude: 48.858372, longitude: 2.294481)
-        //            centerViewOnLocation(location: centerLocation)
-        //        }
         
     }
     
@@ -111,6 +86,8 @@ class MapScreen: UIViewController {
             }
         }
     }
+    
+    
     
     func saveLocation(latitude: Double, longitude: Double) {
         let location = Locations(context: Persistence.context)
@@ -206,15 +183,14 @@ extension MapScreen: CLLocationManagerDelegate, MKMapViewDelegate {
     
     func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
         centerOfMapView = mapView.centerCoordinate
-        let latitude = centerOfMapView.latitude
-        let longitude = centerOfMapView.longitude
         
-        defaults.set(latitude, forKey: "centeredLatitude")
-        defaults.set(longitude, forKey: "centeredLongitude")
-        print(latitude)
-        print(longitude)
-//        print("Latitude Center \(centerOfMapView.latitude)")
-//        print("Longitude Center \(centerOfMapView.longitude)")
-//        print("Center is saved")
+        defaults.set(centerOfMapView.latitude, forKey: "centeredLatitude")
+        defaults.set(centerOfMapView.longitude, forKey: "centeredLongitude")
+        
+        print(centerOfMapView.latitude)
+        print(defaults.double(forKey: "centeredLatitude"))
+        print(centerOfMapView.longitude)
+        print(defaults.double(forKey: "centeredLongitude"))
+        print("\n")
     }
 }
