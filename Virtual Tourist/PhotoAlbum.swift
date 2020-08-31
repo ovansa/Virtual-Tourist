@@ -15,6 +15,17 @@ class PhotoAlbum: UIViewController {
     @IBOutlet weak var albumMapView: MKMapView!
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var btnNewCollection: UIButton!
+    @IBOutlet weak var viewForCollectionView: UIView!
+    
+//    let errorMessageLabel: UILabel = {
+//        let label = UILabel()
+//        label.text = "There is no image. Please check another location."
+//        label.textAlignment = .center
+//        label.numberOfLines = 0
+//        label.textColor = .black
+//        
+//        return label
+//    } ()
     
     var annotationSegue: MKAnnotationView!
     let locationManager = CLLocationManager()
@@ -31,20 +42,38 @@ class PhotoAlbum: UIViewController {
         let latitude = annotationSegue.annotation!.coordinate.latitude
         
         self.btnNewCollection.isEnabled = false
-        
+        print("Fetching new image")
         
         Requests.shared.getImageDataFromLocation(lat: latitude, lon: longitude) { (response) in
-            self.photos = Array(response[0..<5])
-            self.getImagesFromUrl(from: self.photos) { (pictures) in
-                print("Fetching data once again")
-                Requests.shared.getOneSavedImage(with: self.longLat, images: pictures)
-                self.btnNewCollection.isEnabled = true
-                self.savedImages = pictures
-                print("Printing pictures --------- ")
-                print(pictures)
-                self.collectionView.reloadData()
+            if response.count == 0 {
+                self.setEmptyStateForNoImage()
+            } else {
+                if response.count < 15 {
+                    self.photos = Array(response[0..<response.count])
+                } else {
+                    self.photos = Array(response[0..<15])
+                }
+                
+                self.getImagesFromUrl(from: self.photos) { (pictures) in
+                    let images = Images(context: Persistence.context)
+                    images.name = self.longLat
+                    images.imageList = pictures
+                    Persistence.saveContext()
+                    print("-------------Printing newly fetched images------------------")
+                    print(pictures)
+                    self.savedImages = pictures
+                    self.btnNewCollection.isEnabled = true
+                    self.collectionView.reloadData()
+                }
+                
             }
         }
+    }
+    
+    fileprivate func setEmptyStateForNoImage() {
+        self.btnNewCollection.isEnabled = true
+        self.collectionView.setEmptyMessage("There is no image for this location :(")
+        print("There is no image for this location")
     }
     
     override func viewDidLoad() {
@@ -65,24 +94,33 @@ class PhotoAlbum: UIViewController {
             if empty {
                 self.isImage = empty
                 Requests.shared.getImageDataFromLocation(lat: latitude, lon: longitude) { (response) in
-                    self.photos = Array(response[0..<5])
-                    self.getImagesFromUrl(from: self.photos) { (pictures) in
-                        let images = Images(context: Persistence.context)
-                        images.name = self.longLat
-                        images.imageList = pictures
-                        Persistence.saveContext()
-                        self.savedImages = pictures
-                        self.btnNewCollection.isEnabled = true
-                        //                        self.getOneSavedImage(with: self.longLat, images: pictures)
+                    if response.count == 0 {
+                        self.setEmptyStateForNoImage()
+                    } else {
+                        if response.count < 15 {
+                            self.photos = Array(response[0..<response.count])
+                        } else {
+                            self.photos = Array(response[0..<15])
+                        }
+                        
+                        print("The response count -----------------------------")
+                        print(response.count)
+                        self.getImagesFromUrl(from: self.photos) { (pictures) in
+                            let images = Images(context: Persistence.context)
+                            images.name = self.longLat
+                            images.imageList = pictures
+                            Persistence.saveContext()
+                            self.savedImages = pictures
+                            self.btnNewCollection.isEnabled = true
+                        }
+                        
+                        self.collectionView.reloadData()
                     }
-                    
-                    self.collectionView.reloadData()
                 }
             } else {
                 self.isImage = empty
                 Requests.shared.getImagesFromStorage(basedOn: self.longLat) { (images) in
                     self.savedImages = images
-                    //                    print(self.savedImages)
                     self.btnNewCollection.isEnabled = true
                 }
                 
@@ -194,14 +232,28 @@ extension PhotoAlbum: UICollectionViewDelegate, UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        // 1. Select the image to delete
-        // 2. Get the image name
-        // 3. Retrieve the image array that contains this image
-        // 4. Delete this image from the image array
-        // 5. Reload the collectionView
         collectionView.deleteItems(at: [indexPath])
         savedImages.remove(at: indexPath.item)
         print(indexPath)
         Requests.shared.getOneSavedImage(with: self.longLat, images: savedImages)
+    }
+}
+
+extension UICollectionView {
+
+    func setEmptyMessage(_ message: String) {
+        let messageLabel = UILabel(frame: CGRect(x: 0, y: 0, width: self.bounds.size.width, height: self.bounds.size.height))
+        messageLabel.text = message
+        messageLabel.textColor = .black
+        messageLabel.numberOfLines = 0;
+        messageLabel.textAlignment = .center;
+        messageLabel.font = UIFont(name: "Avenir", size: 15)
+        messageLabel.sizeToFit()
+
+        self.backgroundView = messageLabel;
+    }
+
+    func restore() {
+        self.backgroundView = nil
     }
 }

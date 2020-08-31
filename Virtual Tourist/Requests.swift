@@ -35,8 +35,14 @@ class Requests {
         let request = URLRequest(url: urlString.url!)
         
         session.dataTask(with: request) { (data, response, error) in
+//            if let response = response {
+////                print(response)
+//            }
+            // Implement timeouts
             if let data = data {
+                
                 do {
+//                    print(try? JSONSerialization.jsonObject(with: data, options: []))
                     let photoData = try JSONDecoder().decode(PhotosBody.self, from: data)
                     let photos = photoData.photos.photo
                     DispatchQueue.main.async {
@@ -112,11 +118,11 @@ class Requests {
         do {
             let result = try Persistence.context.fetch(fetchImages)
             if result.count != 0 {
-                print("There are some results")
-                print(result[0].imageList!)
+//                print("There are some results")
+//                print(result[0].imageList!)
                 result[0].setValue(images, forKey: "imageList")
                 print("------- After replacing image -------")
-                print(result[0].imageList!)
+//                print(result[0].imageList!)
             } else {
                 print("No result")
             }

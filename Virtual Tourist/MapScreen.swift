@@ -26,25 +26,32 @@ class MapScreen: UIViewController {
         super.viewDidLoad()
         
         self.mapView.delegate = self
+        self.mapView.mapType = .hybrid
         
         let longPresGestureRecog = UILongPressGestureRecognizer(target: self, action: #selector(addAnnotation(press:)))
         longPresGestureRecog.minimumPressDuration = 2.0
         self.mapView.addGestureRecognizer(longPresGestureRecog)
         
         let centerLocationIsAvailable = defaults.object(forKey: "centeredLatitude") != nil && defaults.object(forKey: "centeredLatitude") != nil
+//
+//        let centerLocation = CLLocation(latitude: 6.621190, longitude: 3.284210
+//        )
+//        self.centerViewOnLocation(location: centerLocation)
+//        let zoomRange = MKMapView.CameraZoomRange(maxCenterCoordinateDistance: 200000)
+//        self.mapView.setCameraZoomRange(zoomRange, animated: true)
         
         getLocations { (locations) in
             if locations.isEmpty {
                 let anotation1 = MKPointAnnotation()
                 anotation1.title = "Eiffel Tower"
                 anotation1.coordinate = CLLocationCoordinate2D(latitude: 48.858372, longitude: 2.294481)
-                
+
                 self.mapView.addAnnotation(anotation1)
                 let anotation2 = MKPointAnnotation()
                 anotation2.title = "Kilimanjaro"
                 anotation2.coordinate = CLLocationCoordinate2D(latitude: 27.175014, longitude: 78.042152)
                 self.mapView.addAnnotation(anotation2)
-                
+
                 if centerLocationIsAvailable {
                     let centerLocation = CLLocation(latitude: self.defaults.double(forKey: "centeredLatitude"), longitude: self.defaults.double(forKey: "centeredLongitude"))
                     self.saveLocation(latitude: self.defaults.double(forKey: "centeredLatitude"), longitude: self.defaults.double(forKey: "centeredLongitude")
@@ -56,11 +63,11 @@ class MapScreen: UIViewController {
                     )
                     self.centerViewOnLocation(location: centerLocation)
                 }
-                
-                
+
+
                 let zoomRange = MKMapView.CameraZoomRange(maxCenterCoordinateDistance: 200000)
                 self.mapView.setCameraZoomRange(zoomRange, animated: true)
-                
+
             } else {
                 for location in locations {
                     let annotation = MKPointAnnotation()
@@ -69,7 +76,7 @@ class MapScreen: UIViewController {
                 }
                 let centerLocation = CLLocation(latitude: self.defaults.double(forKey: "centeredLatitude"), longitude: self.defaults.double(forKey: "centeredLongitude"))
                 self.centerViewOnLocation(location: centerLocation)
-                
+
                 let zoomRange = MKMapView.CameraZoomRange(maxCenterCoordinateDistance: 200000)
                 self.mapView.setCameraZoomRange(zoomRange, animated: true)
             }
@@ -130,7 +137,8 @@ class MapScreen: UIViewController {
     }
     
     func centerViewOnLocation(location: CLLocation) {
-        let coordinateRegion = MKCoordinateRegion(center: location.coordinate, latitudinalMeters: 200, longitudinalMeters: 200)
+        let coordinateRegion = MKCoordinateRegion(center: location.coordinate, latitudinalMeters: 2000, longitudinalMeters: 2000
+        )
         mapView.setRegion(coordinateRegion, animated: true)
     }
     

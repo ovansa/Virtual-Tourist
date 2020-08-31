@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15702" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="tAn-Oa-FjK">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15702" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="1LJ-uk-Ef9">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15704"/>
@@ -82,9 +82,9 @@
                                 <rect key="frame" x="0.0" y="208" width="414" height="599"/>
                                 <subviews>
                                     <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="Rug-30-3hC">
-                                        <rect key="frame" x="10" y="5" width="394" height="594"/>
+                                        <rect key="frame" x="5" y="5" width="404" height="594"/>
                                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
-                                        <collectionViewFlowLayout key="collectionViewLayout" automaticEstimatedItemSize="YES" minimumLineSpacing="10" minimumInteritemSpacing="10" id="W9r-b9-suR">
+                                        <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="W9r-b9-suR">
                                             <size key="itemSize" width="50" height="50"/>
                                             <size key="headerReferenceSize" width="0.0" height="0.0"/>
                                             <size key="footerReferenceSize" width="0.0" height="0.0"/>
@@ -103,26 +103,32 @@
                                     </collectionView>
                                 </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="tintColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
-                                    <constraint firstAttribute="trailing" secondItem="Rug-30-3hC" secondAttribute="trailing" constant="10" id="Lb9-ZL-lgw"/>
+                                    <constraint firstAttribute="trailing" secondItem="Rug-30-3hC" secondAttribute="trailing" constant="5" id="Lb9-ZL-lgw"/>
                                     <constraint firstAttribute="bottom" secondItem="Rug-30-3hC" secondAttribute="bottom" id="pUH-d4-2lY"/>
-                                    <constraint firstItem="Rug-30-3hC" firstAttribute="leading" secondItem="CGB-4P-yUu" secondAttribute="leading" constant="10" id="sTj-HR-Fhp"/>
+                                    <constraint firstItem="Rug-30-3hC" firstAttribute="leading" secondItem="CGB-4P-yUu" secondAttribute="leading" constant="5" id="sTj-HR-Fhp"/>
                                     <constraint firstItem="Rug-30-3hC" firstAttribute="top" secondItem="CGB-4P-yUu" secondAttribute="top" constant="5" id="vCm-sF-muK"/>
                                 </constraints>
                             </view>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="890-rx-8aU">
                                 <rect key="frame" x="0.0" y="807" width="414" height="55"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="55" id="Beu-8O-rZj"/>
                                     <constraint firstAttribute="height" constant="55" id="dVT-pH-5Wm"/>
                                 </constraints>
-                                <state key="normal" title="New Collection"/>
+                                <fontDescription key="fontDescription" name="Avenir-Heavy" family="Avenir" pointSize="14"/>
+                                <state key="normal" title="New Collection">
+                                    <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </state>
                                 <connections>
                                     <action selector="newCollection:" destination="nBO-CY-rgf" eventType="touchUpInside" id="AmD-MM-Dy4"/>
                                 </connections>
                             </button>
                         </subviews>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <color key="backgroundColor" systemColor="tertiarySystemGroupedBackgroundColor" red="0.94901960780000005" green="0.94901960780000005" blue="0.96862745100000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="tintColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="CGB-4P-yUu" firstAttribute="top" secondItem="02W-QN-nVb" secondAttribute="bottom" id="0eW-6S-r6J"/>
                             <constraint firstItem="890-rx-8aU" firstAttribute="leading" secondItem="8Fl-Hr-snV" secondAttribute="leading" id="8ga-VM-2c2"/>
@@ -142,11 +148,27 @@
                         <outlet property="albumMapView" destination="cV7-E3-Yc7" id="VW7-Cx-Re1"/>
                         <outlet property="btnNewCollection" destination="890-rx-8aU" id="ews-La-b5s"/>
                         <outlet property="collectionView" destination="Rug-30-3hC" id="apn-0f-LJj"/>
+                        <outlet property="viewForCollectionView" destination="CGB-4P-yUu" id="432-M2-oCw"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="bHF-YD-TIG" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2025" y="104"/>
+        </scene>
+        <!--Card Controller-->
+        <scene sceneID="Oir-Xv-p1F">
+            <objects>
+                <viewController id="1LJ-uk-Ef9" customClass="CardController" customModule="Virtual_Tourist" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="tps-5Q-ryQ">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" cocoaTouchSystemColor="scrollViewTexturedBackgroundColor"/>
+                        <viewLayoutGuide key="safeArea" id="T5M-Qg-5Pi"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="BaS-T1-U6E" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2832" y="104"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="FXG-5g-vfE">

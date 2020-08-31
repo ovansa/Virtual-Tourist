@@ -14,14 +14,14 @@
 
 /* Begin PBXFileReference section */
 		019BE7B6A188CE52D11A80784B414416 /* Pods-Virtual Tourist-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-Virtual Tourist-umbrella.h"; sourceTree = "<group>"; };
-		077B6523969A5F3F8AF1A3BA4F597D3E /* Pods_Virtual_Tourist.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Pods_Virtual_Tourist.framework; path = "Pods-Virtual Tourist.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
+		077B6523969A5F3F8AF1A3BA4F597D3E /* Pods_Virtual_Tourist.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Virtual_Tourist.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3173E684BBD22DE844BA656618D95879 /* Pods-Virtual Tourist-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-Virtual Tourist-acknowledgements.markdown"; sourceTree = "<group>"; };
 		3212113385A8FBBDB272BD23C409FF61 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS12.2.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
 		32CA35AA4B729C477CE4F51A57EBB97F /* Pods-Virtual Tourist-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-Virtual Tourist-Info.plist"; sourceTree = "<group>"; };
 		802FB5B0D83B2B33E3AB10B43F02350D /* Pods-Virtual Tourist.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = "Pods-Virtual Tourist.modulemap"; sourceTree = "<group>"; };
 		92A7BB817DE681546D2A2366DD457B18 /* Pods-Virtual Tourist-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-Virtual Tourist-acknowledgements.plist"; sourceTree = "<group>"; };
 		99797F5C5B457984F54D97B1BBB1D193 /* Pods-Virtual Tourist.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-Virtual Tourist.release.xcconfig"; sourceTree = "<group>"; };
-		9D940727FF8FB9C785EB98E56350EF41 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; lastKnownFileType = text; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		9D940727FF8FB9C785EB98E56350EF41 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		E0CB8A889A4E053BE573D91DD0FCCE03 /* Pods-Virtual Tourist.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-Virtual Tourist.debug.xcconfig"; sourceTree = "<group>"; };
 		F9F14938A9BADB893278636166C7038E /* Pods-Virtual Tourist-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-Virtual Tourist-dummy.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -143,6 +143,7 @@
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
+				Base,
 			);
 			mainGroup = CF1408CF629C7361332E53B88F7BD30C;
 			productRefGroup = 7CBFC0377305D87AAFB1A0F7906E269D /* Products */;
