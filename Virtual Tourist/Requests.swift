@@ -111,7 +111,7 @@ class Requests {
         } catch {}
     }
     
-    func getOneSavedImage(with name: String, images: [String]) {
+    func updateSavedGallery(with name: String, images: [String], updatedList: @escaping ([String]) -> Void) {
         let fetchImages: NSFetchRequest<Images> = Images.fetchRequest()
         fetchImages.predicate = NSPredicate(format: "name = %@", name)
         
@@ -119,10 +119,11 @@ class Requests {
             let result = try Persistence.context.fetch(fetchImages)
             if result.count != 0 {
 //                print("There are some results")
-//                print(result[0].imageList!)
+                print(result[0].imageList!)
                 result[0].setValue(images, forKey: "imageList")
                 print("------- After replacing image -------")
-//                print(result[0].imageList!)
+                print(result[0].imageList!)
+                updatedList(result[0].imageList!)
             } else {
                 print("No result")
             }

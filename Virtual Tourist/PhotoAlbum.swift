@@ -9,6 +9,7 @@
 import UIKit
 import MapKit
 import CoreData
+import Hero
 
 
 class PhotoAlbum: UIViewController {
@@ -17,15 +18,15 @@ class PhotoAlbum: UIViewController {
     @IBOutlet weak var btnNewCollection: UIButton!
     @IBOutlet weak var viewForCollectionView: UIView!
     
-//    let errorMessageLabel: UILabel = {
-//        let label = UILabel()
-//        label.text = "There is no image. Please check another location."
-//        label.textAlignment = .center
-//        label.numberOfLines = 0
-//        label.textColor = .black
-//        
-//        return label
-//    } ()
+    //    let errorMessageLabel: UILabel = {
+    //        let label = UILabel()
+    //        label.text = "There is no image. Please check another location."
+    //        label.textAlignment = .center
+    //        label.numberOfLines = 0
+    //        label.textColor = .black
+    //
+    //        return label
+    //    } ()
     
     var annotationSegue: MKAnnotationView!
     let locationManager = CLLocationManager()
@@ -49,23 +50,57 @@ class PhotoAlbum: UIViewController {
                 self.setEmptyStateForNoImage()
             } else {
                 if response.count < 15 {
-                    self.photos = Array(response[0..<response.count])
+                    self.photos = Array(response[0...response.count])
+                    let phot = Array(response[0..<response.count])
+                    self.getImagesFromUrl(from: phot) { (pictures) in
+                        
+                        Requests.shared.updateSavedGallery(with: self.longLat, images: pictures) { (updatedImages) in
+                            self.savedImages = updatedImages
+                            self.btnNewCollection.isEnabled = true
+                            
+                            print("Image have been saved to cache1")
+                            print(updatedImages)
+                            self.collectionView.reloadData()
+                        }
+                        //                        let images = Images(context: Persistence.context)
+                        //                        images.name = self.longLat
+                        //                        images.imageList = pictures
+                        //                        Persistence.saveContext()
+                        
+                    }
                 } else {
-                    self.photos = Array(response[0..<15])
+                    self.photos = Array(response[0...15])
+                    let phot = Array(response[0...15])
+                    self.getImagesFromUrl(from: phot) { (pictures) in
+                        
+                        Requests.shared.updateSavedGallery(with: self.longLat, images: pictures) { (updatedImages) in
+                            self.savedImages = updatedImages
+                            self.btnNewCollection.isEnabled = true
+                            
+                            print("Image have been saved to cache1")
+                            print(updatedImages)
+                            self.collectionView.reloadData()
+                        }
+                        //                        let images = Images(context: Persistence.context)
+                        //                        images.name = self.longLat
+                        //                        images.imageList = pictures
+                        //                        Persistence.saveContext()
+                        
+                    }
                 }
-                
-                self.getImagesFromUrl(from: self.photos) { (pictures) in
-                    let images = Images(context: Persistence.context)
-                    images.name = self.longLat
-                    images.imageList = pictures
-                    Persistence.saveContext()
-                    print("-------------Printing newly fetched images------------------")
-                    print(pictures)
-                    self.savedImages = pictures
-                    self.btnNewCollection.isEnabled = true
-                    self.collectionView.reloadData()
-                }
-                
+                //
+                //                        print("The response count -----------------------------")
+                //                        print(response.count)
+                //                        self.getImagesFromUrl(from: self.photos) { (pictures) in
+                //                            let images = Images(context: Persistence.context)
+                //                            images.name = self.longLat
+                //                            images.imageList = pictures
+                //                            Persistence.saveContext()
+                //                            self.savedImages = pictures
+                //                            self.btnNewCollection.isEnabled = true
+                //                        }
+                //
+                //                        self.collectionView.reloadData()
             }
         }
     }
@@ -74,6 +109,62 @@ class PhotoAlbum: UIViewController {
         self.btnNewCollection.isEnabled = true
         self.collectionView.setEmptyMessage("There is no image for this location :(")
         print("There is no image for this location")
+    }
+    
+    fileprivate func makeRequestForImageData() {
+        let longitude = annotationSegue.annotation!.coordinate.longitude
+        let latitude = annotationSegue.annotation!.coordinate.latitude
+        
+        Requests.shared.getImageDataFromLocation(lat: latitude, lon: longitude) { (response) in
+            if response.count == 0 {
+                self.setEmptyStateForNoImage()
+            } else {
+                if response.count < 15 {
+                    self.photos = Array(response[0...response.count])
+                    let phot = Array(response[0..<response.count])
+                    self.getImagesFromUrl(from: phot) { (pictures) in
+                        let images = Images(context: Persistence.context)
+                        images.name = self.longLat
+                        images.imageList = pictures
+                        Persistence.saveContext()
+                        self.savedImages = pictures
+                        self.btnNewCollection.isEnabled = true
+                        
+                        print("Image have been saved to cache1")
+                        print(pictures)
+                        self.collectionView.reloadData()
+                    }
+                } else {
+                    self.photos = Array(response[0...15])
+                    let phot = Array(response[0...15])
+                    self.getImagesFromUrl(from: phot) { (pictures) in
+                        let images = Images(context: Persistence.context)
+                        images.name = self.longLat
+                        images.imageList = pictures
+                        Persistence.saveContext()
+                        self.savedImages = pictures
+                        self.btnNewCollection.isEnabled = true
+                        
+                        print("Image have been saved to cache2")
+                        print(pictures)
+                        self.collectionView.reloadData()
+                    }
+                }
+                //
+                //                        print("The response count -----------------------------")
+                //                        print(response.count)
+                //                        self.getImagesFromUrl(from: self.photos) { (pictures) in
+                //                            let images = Images(context: Persistence.context)
+                //                            images.name = self.longLat
+                //                            images.imageList = pictures
+                //                            Persistence.saveContext()
+                //                            self.savedImages = pictures
+                //                            self.btnNewCollection.isEnabled = true
+                //                        }
+                //
+                //                        self.collectionView.reloadData()
+            }
+        }
     }
     
     override func viewDidLoad() {
@@ -89,34 +180,11 @@ class PhotoAlbum: UIViewController {
         self.longLat = longString + latString
         
         btnNewCollection.isEnabled = false
-      
+        
         Requests.shared.isImageTitleEmpty(basedOn: self.longLat) { (empty) in
             if empty {
                 self.isImage = empty
-                Requests.shared.getImageDataFromLocation(lat: latitude, lon: longitude) { (response) in
-                    if response.count == 0 {
-                        self.setEmptyStateForNoImage()
-                    } else {
-                        if response.count < 15 {
-                            self.photos = Array(response[0..<response.count])
-                        } else {
-                            self.photos = Array(response[0..<15])
-                        }
-                        
-                        print("The response count -----------------------------")
-                        print(response.count)
-                        self.getImagesFromUrl(from: self.photos) { (pictures) in
-                            let images = Images(context: Persistence.context)
-                            images.name = self.longLat
-                            images.imageList = pictures
-                            Persistence.saveContext()
-                            self.savedImages = pictures
-                            self.btnNewCollection.isEnabled = true
-                        }
-                        
-                        self.collectionView.reloadData()
-                    }
-                }
+                self.makeRequestForImageData()
             } else {
                 self.isImage = empty
                 Requests.shared.getImagesFromStorage(basedOn: self.longLat) { (images) in
@@ -180,21 +248,22 @@ class PhotoAlbum: UIViewController {
         collectionView.dataSource = self
         
         let nib = UINib(nibName: photoIdentifier, bundle: nil)
+        
         collectionView.register(nib, forCellWithReuseIdentifier: photoIdentifier)
     }
     
     func setUpCollectionViewItemSize() {
         if collectionViewFlowLayout == nil {
-            let numberOfItemPerRow: CGFloat = 4
-            let lineSpacing: CGFloat = 5
-            let interItemSpacing: CGFloat = 5
+            let _: CGFloat = 5
+            let lineSpacing: CGFloat = 10
+            let interItemSpacing: CGFloat = 10
             
-            let width = (collectionView.frame.width - (numberOfItemPerRow - 1
-                ) * interItemSpacing) / numberOfItemPerRow
-            let height = width
+            let itemSize = self.view.bounds.width / 3 - 10
+            
             collectionViewFlowLayout = UICollectionViewFlowLayout()
-            collectionViewFlowLayout.itemSize = CGSize(width: width, height: height)
-            collectionViewFlowLayout.sectionInset = UIEdgeInsets.zero
+            
+            collectionViewFlowLayout.itemSize = CGSize(width: itemSize, height: itemSize + 20)
+            collectionViewFlowLayout.sectionInset = UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5)
             collectionViewFlowLayout.scrollDirection = .vertical
             collectionViewFlowLayout.minimumLineSpacing = lineSpacing
             collectionViewFlowLayout.minimumInteritemSpacing = interItemSpacing
@@ -212,22 +281,27 @@ class PhotoAlbum: UIViewController {
 
 extension PhotoAlbum: UICollectionViewDelegate, UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        if isImage == false {
-            return savedImages.count
-        } else {
-            return photos.count
-        }
+        //        if isImage == false {
+        //            return savedImages.count
+        //        } else {
+        //            return photos.count
+        //        }
+        
+        return savedImages.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: photoIdentifier, for: indexPath) as! PhotoCell
-        if isImage == false {
-            cell.configures(image: savedImages[indexPath.item])
-            print("Cofiguring from local storage")
-        } else {
-            cell.configure(photo: photos[indexPath.item])
-            print("Cofiguring from internat image")
-        }
+        //        if isImage == false {
+        //            cell.configures(image: savedImages[indexPath.item])
+        //            print("Cofiguring from local storage")
+        //        } else {
+        //            cell.configure(photo: photos[indexPath.item])
+        //            print("Cofiguring from internat image")
+        //        }
+        
+        cell.configures(image: savedImages[indexPath.item])
+        
         return cell
     }
     
@@ -235,12 +309,27 @@ extension PhotoAlbum: UICollectionViewDelegate, UICollectionViewDataSource {
         collectionView.deleteItems(at: [indexPath])
         savedImages.remove(at: indexPath.item)
         print(indexPath)
-        Requests.shared.getOneSavedImage(with: self.longLat, images: savedImages)
+        Requests.shared.updateSavedGallery(with: self.longLat, images: savedImages) { (updatedList) in
+            self.savedImages = updatedList
+            self.collectionView.reloadData()
+        }
+        
+        // Display full image
+        //        let image = savedImages[indexPath.item]
+        //        print(image)
+        //
+        //        let vc = storyboard?.instantiateViewController(identifier: "DetailImageViewController") as? DetailImageViewController
+        //
+        //        vc?.imageName = image
+        //
+        //        self.navigationController?.pushViewController(vc!, animated: true)
+        
+        
     }
 }
 
 extension UICollectionView {
-
+    
     func setEmptyMessage(_ message: String) {
         let messageLabel = UILabel(frame: CGRect(x: 0, y: 0, width: self.bounds.size.width, height: self.bounds.size.height))
         messageLabel.text = message
@@ -249,10 +338,10 @@ extension UICollectionView {
         messageLabel.textAlignment = .center;
         messageLabel.font = UIFont(name: "Avenir", size: 15)
         messageLabel.sizeToFit()
-
+        
         self.backgroundView = messageLabel;
     }
-
+    
     func restore() {
         self.backgroundView = nil
     }

@@ -8,6 +8,10 @@
 
 import UIKit
 
+/**
+ Create imge gallery
+ */
+
 class CardController: UIViewController {
     enum CardState {
         case expanded
@@ -31,7 +35,7 @@ class CardController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         setUP()
     }
     
@@ -72,7 +76,7 @@ class CardController: UIViewController {
             startInteractiveTransition(state: nextState, interval: 0.9)
             
         case .changed:
-        
+            
             let translation = recognizer.translation(in: self.cardViewController.handleView)
             var fractionComplete = translation.y / cardHeight
             fractionComplete = cardVisible ? fractionComplete : -fractionComplete

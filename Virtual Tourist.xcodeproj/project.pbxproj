@@ -18,6 +18,7 @@
 		0B32913E24FD4294007F9117 /* CardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B32913C24FD4294007F9117 /* CardViewController.swift */; };
 		0B32913F24FD4294007F9117 /* CardViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0B32913D24FD4294007F9117 /* CardViewController.xib */; };
 		0B32914124FD487D007F9117 /* CardController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B32914024FD487D007F9117 /* CardController.swift */; };
+		0B8CD32324FDEC6E00645537 /* DetailImageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8CD32224FDEC6E00645537 /* DetailImageViewController.swift */; };
 		0BB1293324EB05CF00DFC540 /* Images+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB1293124EB05CF00DFC540 /* Images+CoreDataClass.swift */; };
 		0BB1293424EB05CF00DFC540 /* Images+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB1293224EB05CF00DFC540 /* Images+CoreDataProperties.swift */; };
 		0BB1293624EB10CC00DFC540 /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB1293524EB10CC00DFC540 /* Persistence.swift */; };
@@ -44,6 +45,7 @@
 		0B32913C24FD4294007F9117 /* CardViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardViewController.swift; sourceTree = "<group>"; };
 		0B32913D24FD4294007F9117 /* CardViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CardViewController.xib; sourceTree = "<group>"; };
 		0B32914024FD487D007F9117 /* CardController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardController.swift; sourceTree = "<group>"; };
+		0B8CD32224FDEC6E00645537 /* DetailImageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailImageViewController.swift; sourceTree = "<group>"; };
 		0BB1293124EB05CF00DFC540 /* Images+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Images+CoreDataClass.swift"; sourceTree = "<group>"; };
 		0BB1293224EB05CF00DFC540 /* Images+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Images+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		0BB1293524EB10CC00DFC540 /* Persistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
@@ -101,6 +103,7 @@
 				0BB1293524EB10CC00DFC540 /* Persistence.swift */,
 				0B16ED2624E441BA00C251C3 /* SceneDelegate.swift */,
 				0B16ED2A24E441BA00C251C3 /* Main.storyboard */,
+				0B8CD32224FDEC6E00645537 /* DetailImageViewController.swift */,
 				0B32914024FD487D007F9117 /* CardController.swift */,
 				0B32913C24FD4294007F9117 /* CardViewController.swift */,
 				0B32913D24FD4294007F9117 /* CardViewController.xib */,
@@ -144,6 +147,7 @@
 				0B16ED1D24E441BA00C251C3 /* Sources */,
 				0B16ED1E24E441BA00C251C3 /* Frameworks */,
 				0B16ED1F24E441BA00C251C3 /* Resources */,
+				2873325A170BF2E35B9B773B /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -203,6 +207,23 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		2873325A170BF2E35B9B773B /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Virtual Tourist/Pods-Virtual Tourist-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Virtual Tourist/Pods-Virtual Tourist-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Virtual Tourist/Pods-Virtual Tourist-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		70401324276E74C59DAC82B3 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -247,6 +268,7 @@
 				0BB1293424EB05CF00DFC540 /* Images+CoreDataProperties.swift in Sources */,
 				0BD76F3B24E891F3008445D5 /* Requests.swift in Sources */,
 				0B16ED2724E441BA00C251C3 /* SceneDelegate.swift in Sources */,
+				0B8CD32324FDEC6E00645537 /* DetailImageViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
