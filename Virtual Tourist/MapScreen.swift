@@ -77,8 +77,20 @@ class MapScreen: UIViewController {
         }
     }
     
+    func configureNavBar() {
+        self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
+        self.navigationController?.navigationBar.shadowImage = UIImage()
+        self.navigationController?.navigationBar.isTranslucent = true
+        self.navigationController?.view.backgroundColor = .clear
+        self.navigationController?.navigationBar.tintColor = .white
+        let textAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
+        self.navigationController?.navigationBar.titleTextAttributes = textAttributes
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        configureNavBar()
         
         self.mapView.delegate = self
         self.mapView.mapType = .hybrid
@@ -148,14 +160,16 @@ class MapScreen: UIViewController {
     
     func centerViewOnUserLocation() {
         if let location = locationManager.location?.coordinate {
-            let region = MKCoordinateRegion.init(center: location, latitudinalMeters: 400, longitudinalMeters: 100)
+            let region = MKCoordinateRegion.init(center: location, latitudinalMeters: 5000, longitudinalMeters: 100)
             mapView.setRegion(region, animated: true)
         }
     }
     
     func centerViewOnLocation(location: CLLocation) {
-        let coordinateRegion = MKCoordinateRegion(center: location.coordinate, latitudinalMeters: 2000, longitudinalMeters: 2000
+        let coordinateRegion = MKCoordinateRegion(center: location.coordinate, latitudinalMeters: 50000, longitudinalMeters: 50000
         )
+        
+//        let sm = MKCoordinateRegion(center: location, span: <#T##MKCoordinateSpan#>)
         mapView.setRegion(coordinateRegion, animated: true)
     }
     
@@ -216,8 +230,12 @@ extension MapScreen: CLLocationManagerDelegate, MKMapViewDelegate {
     func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
         centerOfMapView = mapView.centerCoordinate
         
+        let some = mapView.region.span.latitudeDelta
+        
         defaults.set(centerOfMapView.latitude, forKey: "centeredLatitude")
         defaults.set(centerOfMapView.longitude, forKey: "centeredLongitude")
+        
+        
         
         let center = getCenterLocation(for: mapView)
         let geoCoder = CLGeocoder()
@@ -227,7 +245,7 @@ extension MapScreen: CLLocationManagerDelegate, MKMapViewDelegate {
         guard center.distance(from: previousLocation) > 50 else { return }
         
         geoCoder.reverseGeocodeLocation(center) { (placemarks, error) in
-            if let error = error {
+            if error != nil {
                 
             }
             
@@ -240,14 +258,14 @@ extension MapScreen: CLLocationManagerDelegate, MKMapViewDelegate {
             guard let name3 = placemarks.name else {return}
             
             DispatchQueue.main.async {
-                print("\(name) ----- \(name) ------- \(name3)")
+                print("\(name) ----- \(name2) ------- \(name3)")
             }
         }
         
         
-        print(centerOfMapView.latitude)
+//        print(centerOfMapView.latitude)
         //        print(defaults.double(forKey: "centeredLatitude"))
-        print(centerOfMapView.longitude)
+//        print(centerOfMapView.longitude)
         //        print(defaults.double(forKey: "centeredLongitude"))
         //        print("\n")
     }

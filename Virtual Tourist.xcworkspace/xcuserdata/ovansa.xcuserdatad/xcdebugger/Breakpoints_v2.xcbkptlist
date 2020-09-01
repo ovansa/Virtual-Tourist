@@ -14,8 +14,8 @@
             filePath = "Virtual Tourist/PhotoAlbum.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "187"
-            endingLineNumber = "187"
+            startingLineNumber = "203"
+            endingLineNumber = "203"
             landmarkName = "viewDidLoad()"
             landmarkType = "7">
             <Locations>
@@ -62,9 +62,9 @@
             filePath = "Virtual Tourist/PhotoAlbum.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "255"
-            endingLineNumber = "255"
-            landmarkName = "setUpCollectionViewItemSize()"
+            startingLineNumber = "273"
+            endingLineNumber = "273"
+            landmarkName = "setUpCollectionView()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -78,8 +78,8 @@
             filePath = "Virtual Tourist/PhotoAlbum.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "273"
-            endingLineNumber = "273"
+            startingLineNumber = "291"
+            endingLineNumber = "291"
             landmarkName = "setUpCollectionViewItemSize()"
             landmarkType = "7">
          </BreakpointContent>

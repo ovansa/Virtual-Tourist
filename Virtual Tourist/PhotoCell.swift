@@ -20,10 +20,10 @@ class PhotoCell: UICollectionViewCell {
     
     func configures(image: String) {
         let document = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
-        
+        self.photoImageView.image =  #imageLiteral(resourceName: "VirtualTourist_76.png")
         let imagePath = document.appendingPathComponent(image)
-        self.photoImageView.image = UIImage(contentsOfFile: imagePath.path)
-        self.photoImageView.heroID = String(imagePath.path)
+        self.photoImageView.image = UIImage(contentsOfFile: imagePath.path) ?? #imageLiteral(resourceName: "VirtualTourist_76.png")
+//        self.photoImageView.heroID = String(imagePath.path)
 //        print(String(self.photoImageView.heroID ?? ""))
     }
     

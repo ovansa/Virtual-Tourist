@@ -17,6 +17,9 @@ class PhotoAlbum: UIViewController {
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var btnNewCollection: UIButton!
     @IBOutlet weak var viewForCollectionView: UIView!
+    @IBOutlet weak var backButton: UIButton!
+    @IBOutlet weak var refreshButton: UIButton!
+    @IBOutlet weak var deleteButton: UIButton!
     
     //    let errorMessageLabel: UILabel = {
     //        let label = UILabel()
@@ -38,6 +41,13 @@ class PhotoAlbum: UIViewController {
     var photoDirUrl = [String]()
     var longLat: String!
     
+    @IBAction func deleteButtonPressed(_ sender: UIButton) {
+        print("Delete is pressed")
+    }
+    @IBAction func backButtonPressed(_ sender: Any) {
+        _ = navigationController?.popViewController(animated: true)
+        print("Back is pressed")
+    }
     @IBAction func newCollection(_ sender: Any) {
         let longitude = annotationSegue.annotation!.coordinate.longitude
         let latitude = annotationSegue.annotation!.coordinate.latitude
@@ -49,7 +59,7 @@ class PhotoAlbum: UIViewController {
             if response.count == 0 {
                 self.setEmptyStateForNoImage()
             } else {
-                if response.count < 15 {
+                if response.count < 20 {
                     self.photos = Array(response[0...response.count])
                     let phot = Array(response[0..<response.count])
                     self.getImagesFromUrl(from: phot) { (pictures) in
@@ -69,8 +79,8 @@ class PhotoAlbum: UIViewController {
                         
                     }
                 } else {
-                    self.photos = Array(response[0...15])
-                    let phot = Array(response[0...15])
+                    self.photos = Array(response[0...20])
+                    let phot = Array(response[0...20])
                     self.getImagesFromUrl(from: phot) { (pictures) in
                         
                         Requests.shared.updateSavedGallery(with: self.longLat, images: pictures) { (updatedImages) in
@@ -119,8 +129,8 @@ class PhotoAlbum: UIViewController {
             if response.count == 0 {
                 self.setEmptyStateForNoImage()
             } else {
-                if response.count < 15 {
-                    self.photos = Array(response[0...response.count])
+                if response.count < 20 {
+                    self.photos = Array(response[0...response.count-1])
                     let phot = Array(response[0..<response.count])
                     self.getImagesFromUrl(from: phot) { (pictures) in
                         let images = Images(context: Persistence.context)
@@ -135,8 +145,8 @@ class PhotoAlbum: UIViewController {
                         self.collectionView.reloadData()
                     }
                 } else {
-                    self.photos = Array(response[0...15])
-                    let phot = Array(response[0...15])
+                    self.photos = Array(response[0...20])
+                    let phot = Array(response[0...20])
                     self.getImagesFromUrl(from: phot) { (pictures) in
                         let images = Images(context: Persistence.context)
                         images.name = self.longLat
@@ -170,6 +180,14 @@ class PhotoAlbum: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        navigationItem.hidesBackButton = true
+        self.navigationController?.setNavigationBarHidden(true, animated: true)
+        
+        backButton.layer.cornerRadius = backButton.frame.size.height / 2
+        refreshButton.layer.cornerRadius = refreshButton.frame.size.height / 2
+        
+    deleteButton.layer.cornerRadius = deleteButton.frame.size.height / 2
+        
         let anotation = MKPointAnnotation()
         let longitude = annotationSegue.annotation!.coordinate.longitude
         let latitude = annotationSegue.annotation!.coordinate.latitude
@@ -180,6 +198,7 @@ class PhotoAlbum: UIViewController {
         self.longLat = longString + latString
         
         btnNewCollection.isEnabled = false
+        btnNewCollection.isHidden = true
         
         Requests.shared.isImageTitleEmpty(basedOn: self.longLat) { (empty) in
             if empty {
@@ -201,6 +220,8 @@ class PhotoAlbum: UIViewController {
         
         centerViewOnLocation(location: myLocation)
         setUpCollectionView()
+        
+        self.collectionView.bringSubviewToFront(btnNewCollection)
     }
     
     func getImagesFromUrl(from arr: [Photo], photoGotten: @escaping ([String]) -> Void) {
@@ -255,10 +276,10 @@ class PhotoAlbum: UIViewController {
     func setUpCollectionViewItemSize() {
         if collectionViewFlowLayout == nil {
             let _: CGFloat = 5
-            let lineSpacing: CGFloat = 10
-            let interItemSpacing: CGFloat = 10
+            let lineSpacing: CGFloat = 3
+            let interItemSpacing: CGFloat = 3
             
-            let itemSize = self.view.bounds.width / 3 - 10
+            let itemSize = self.view.bounds.width / 3 - 6
             
             collectionViewFlowLayout = UICollectionViewFlowLayout()
             
@@ -274,7 +295,7 @@ class PhotoAlbum: UIViewController {
     
     
     func centerViewOnLocation(location: CLLocation) {
-        let coordinateRegion = MKCoordinateRegion(center: location.coordinate, latitudinalMeters: 500, longitudinalMeters: 500)
+        let coordinateRegion = MKCoordinateRegion(center: location.coordinate, latitudinalMeters: 20000, longitudinalMeters: 20000)
         albumMapView.setRegion(coordinateRegion, animated: true)
     }
 }
@@ -308,7 +329,7 @@ extension PhotoAlbum: UICollectionViewDelegate, UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         collectionView.deleteItems(at: [indexPath])
         savedImages.remove(at: indexPath.item)
-        print(indexPath)
+//        print(indexPath)
         Requests.shared.updateSavedGallery(with: self.longLat, images: savedImages) { (updatedList) in
             self.savedImages = updatedList
             self.collectionView.reloadData()
