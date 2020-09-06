@@ -12,26 +12,64 @@ import CoreData
 
 class MapScreen: UIViewController {
     @IBOutlet weak var mapView: MKMapView!
-    let defaults = UserDefaults.standard
-    
-    var previousLocation: CLLocation?
-    
     @IBAction func deleteLocation(_ sender: Any) {
         Requests.shared.deleteLocationData()
     }
+    
+    let defaults = UserDefaults.standard
+    var previousLocation: CLLocation?
     let imageSegueIdentifier = "imageViewSegue"
-    
     var centerOfMapView: CLLocationCoordinate2D!
-    
     let locationManager = CLLocationManager()
-    fileprivate func displaySavedLocations(_ centerLocationIsAvailable: Bool) {
-        //
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        self.mapView.delegate = self
+        self.mapView.mapType = .standard
+        
+        configureNavBar()
+        addPinOnMapGesture()
+        
+        previousLocation = getCenterLocation(for: mapView)
+        
+        let centerLocationIsAvailable = defaults.object(forKey: "centeredLatitude") != nil && defaults.object(forKey: "centeredLatitude") != nil
+        displaySavedLocations(centerLocationIsAvailable)
+        
         //        let centerLocation = CLLocation(latitude: 6.621190, longitude: 3.284210
         //        )
         //        self.centerViewOnLocation(location: centerLocation)
         //        let zoomRange = MKMapView.CameraZoomRange(maxCenterCoordinateDistance: 200000)
         //        self.mapView.setCameraZoomRange(zoomRange, animated: true)
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        let annotation = sender as! MKAnnotationView
         
+        if segue.identifier == imageSegueIdentifier {
+            if let vc = segue.destination as? PhotoAlbum {
+                vc.annotationSegue = annotation
+            }
+        }
+    }
+    
+    fileprivate func addPinOnMapGesture() {
+        let longPresGestureRecog = UILongPressGestureRecognizer(target: self, action: #selector(addAnnotation(press:)))
+        longPresGestureRecog.minimumPressDuration = 2.0
+        self.mapView.addGestureRecognizer(longPresGestureRecog)
+    }
+    
+    func configureNavBar() {
+        self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
+        self.navigationController?.navigationBar.shadowImage = UIImage()
+        self.navigationController?.navigationBar.isTranslucent = true
+        self.navigationController?.view.backgroundColor = .clear
+        self.navigationController?.navigationBar.tintColor = .white
+        let textAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
+        self.navigationController?.navigationBar.titleTextAttributes = textAttributes
+    }
+    
+    fileprivate func displaySavedLocations(_ centerLocationIsAvailable: Bool) {
         getLocations { (locations) in
             if locations.isEmpty {
                 let anotation1 = MKPointAnnotation()
@@ -77,54 +115,6 @@ class MapScreen: UIViewController {
         }
     }
     
-    func configureNavBar() {
-        self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
-        self.navigationController?.navigationBar.shadowImage = UIImage()
-        self.navigationController?.navigationBar.isTranslucent = true
-        self.navigationController?.view.backgroundColor = .clear
-        self.navigationController?.navigationBar.tintColor = .white
-        let textAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
-        self.navigationController?.navigationBar.titleTextAttributes = textAttributes
-    }
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        configureNavBar()
-        
-        self.mapView.delegate = self
-        self.mapView.mapType = .hybrid
-        
-        previousLocation = getCenterLocation(for: mapView)
-        
-        let longPresGestureRecog = UILongPressGestureRecognizer(target: self, action: #selector(addAnnotation(press:)))
-        longPresGestureRecog.minimumPressDuration = 2.0
-        self.mapView.addGestureRecognizer(longPresGestureRecog)
-        
-        let centerLocationIsAvailable = defaults.object(forKey: "centeredLatitude") != nil && defaults.object(forKey: "centeredLatitude") != nil
-        
-        
-//        let centerLocation = CLLocation(latitude: 6.621190, longitude: 3.284210
-//        )
-//        self.centerViewOnLocation(location: centerLocation)
-//        let zoomRange = MKMapView.CameraZoomRange(maxCenterCoordinateDistance: 200000)
-//        self.mapView.setCameraZoomRange(zoomRange, animated: true)
-                displaySavedLocations(centerLocationIsAvailable)
-        
-    }
-    
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        let annotation = sender as! MKAnnotationView
-        
-        if segue.identifier == imageSegueIdentifier {
-            if let vc = segue.destination as? PhotoAlbum {
-                vc.annotationSegue = annotation
-            }
-        }
-    }
-    
-    
-    
     func saveLocation(latitude: Double, longitude: Double) {
         let location = Locations(context: Persistence.context)
         location.latitude = latitude
@@ -169,7 +159,7 @@ class MapScreen: UIViewController {
         let coordinateRegion = MKCoordinateRegion(center: location.coordinate, latitudinalMeters: 50000, longitudinalMeters: 50000
         )
         
-//        let sm = MKCoordinateRegion(center: location, span: <#T##MKCoordinateSpan#>)
+        //        let sm = MKCoordinateRegion(center: location, span: <#T##MKCoordinateSpan#>)
         mapView.setRegion(coordinateRegion, animated: true)
     }
     
@@ -229,13 +219,9 @@ extension MapScreen: CLLocationManagerDelegate, MKMapViewDelegate {
     
     func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
         centerOfMapView = mapView.centerCoordinate
-        
-        let some = mapView.region.span.latitudeDelta
-        
+        //        let some = mapView.region.span.latitudeDelt
         defaults.set(centerOfMapView.latitude, forKey: "centeredLatitude")
         defaults.set(centerOfMapView.longitude, forKey: "centeredLongitude")
-        
-        
         
         let center = getCenterLocation(for: mapView)
         let geoCoder = CLGeocoder()
@@ -245,10 +231,6 @@ extension MapScreen: CLLocationManagerDelegate, MKMapViewDelegate {
         guard center.distance(from: previousLocation) > 50 else { return }
         
         geoCoder.reverseGeocodeLocation(center) { (placemarks, error) in
-            if error != nil {
-                
-            }
-            
             guard let placemarks = placemarks?.first else {
                 return
             }
@@ -261,12 +243,5 @@ extension MapScreen: CLLocationManagerDelegate, MKMapViewDelegate {
                 print("\(name) ----- \(name2) ------- \(name3)")
             }
         }
-        
-        
-//        print(centerOfMapView.latitude)
-        //        print(defaults.double(forKey: "centeredLatitude"))
-//        print(centerOfMapView.longitude)
-        //        print(defaults.double(forKey: "centeredLongitude"))
-        //        print("\n")
     }
 }

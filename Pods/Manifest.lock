@@ -1,16 +1,20 @@
 PODS:
-  - Hero (1.5.0)
+  - MBProgressHUD (1.2.0)
+  - SVProgressHUD (2.2.5)
 
 DEPENDENCIES:
-  - Hero
+  - MBProgressHUD
+  - SVProgressHUD
 
 SPEC REPOS:
   trunk:
-    - Hero
+    - MBProgressHUD
+    - SVProgressHUD
 
 SPEC CHECKSUMS:
-  Hero: b7385b75e7259da62f4f85462f59a5082d66b058
+  MBProgressHUD: 3ee5efcc380f6a79a7cc9b363dd669c5e1ae7406
+  SVProgressHUD: 1428aafac632c1f86f62aa4243ec12008d7a51d6
 
-PODFILE CHECKSUM: c1864b88b924253b087ab6eadf2722f348427da8
+PODFILE CHECKSUM: 27178a979b6e7c3ddd480deeb1ba2044f6b92754
 
 COCOAPODS: 1.8.3

@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -93,21 +93,14 @@
 		0B16ED2324E441BA00C251C3 /* Virtual Tourist */ = {
 			isa = PBXGroup;
 			children = (
-				0BB1293724F173C400DFC540 /* Locations+CoreDataClass.swift */,
-				0BB1293824F173C400DFC540 /* Locations+CoreDataProperties.swift */,
-				0BB1293124EB05CF00DFC540 /* Images+CoreDataClass.swift */,
-				0BB1293224EB05CF00DFC540 /* Images+CoreDataProperties.swift */,
-				0BD76F3824E888E7008445D5 /* Photos.swift */,
-				0B16ED3B24E4708400C251C3 /* MapScreen.swift */,
+				0BC6180A2500BDC20076ECD5 /* Extensions */,
+				0BC618092500BCB70076ECD5 /* Models */,
+				0BC618082500BC640076ECD5 /* Controllers */,
 				0B16ED2424E441BA00C251C3 /* AppDelegate.swift */,
 				0BB1293524EB10CC00DFC540 /* Persistence.swift */,
+				0B32913D24FD4294007F9117 /* CardViewController.xib */,
 				0B16ED2624E441BA00C251C3 /* SceneDelegate.swift */,
 				0B16ED2A24E441BA00C251C3 /* Main.storyboard */,
-				0B8CD32224FDEC6E00645537 /* DetailImageViewController.swift */,
-				0B32914024FD487D007F9117 /* CardController.swift */,
-				0B32913C24FD4294007F9117 /* CardViewController.swift */,
-				0B32913D24FD4294007F9117 /* CardViewController.xib */,
-				0B16ED3D24E56C3200C251C3 /* PhotoAlbum.swift */,
 				0BD76F3A24E891F3008445D5 /* Requests.swift */,
 				0B16ED3024E441BB00C251C3 /* Assets.xcassets */,
 				0B16ED3224E441BB00C251C3 /* LaunchScreen.storyboard */,
@@ -117,6 +110,37 @@
 				0BD76F4824E89E3E008445D5 /* PhotoCell.xib */,
 			);
 			path = "Virtual Tourist";
+			sourceTree = "<group>";
+		};
+		0BC618082500BC640076ECD5 /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				0B16ED3B24E4708400C251C3 /* MapScreen.swift */,
+				0B16ED3D24E56C3200C251C3 /* PhotoAlbum.swift */,
+				0B8CD32224FDEC6E00645537 /* DetailImageViewController.swift */,
+				0B32914024FD487D007F9117 /* CardController.swift */,
+				0B32913C24FD4294007F9117 /* CardViewController.swift */,
+			);
+			path = Controllers;
+			sourceTree = "<group>";
+		};
+		0BC618092500BCB70076ECD5 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				0BD76F3824E888E7008445D5 /* Photos.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		0BC6180A2500BDC20076ECD5 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				0BB1293724F173C400DFC540 /* Locations+CoreDataClass.swift */,
+				0BB1293824F173C400DFC540 /* Locations+CoreDataProperties.swift */,
+				0BB1293124EB05CF00DFC540 /* Images+CoreDataClass.swift */,
+				0BB1293224EB05CF00DFC540 /* Images+CoreDataProperties.swift */,
+			);
+			path = Extensions;
 			sourceTree = "<group>";
 		};
 		1FCF542B64F4B24989B6C11E /* Pods */ = {

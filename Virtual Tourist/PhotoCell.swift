@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import Hero
 
 class PhotoCell: UICollectionViewCell {
     @IBOutlet weak var photoImageView: UIImageView!
@@ -19,12 +18,10 @@ class PhotoCell: UICollectionViewCell {
     }
     
     func configures(image: String) {
-        let document = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
         self.photoImageView.image =  #imageLiteral(resourceName: "VirtualTourist_76.png")
+        let document = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
         let imagePath = document.appendingPathComponent(image)
-        self.photoImageView.image = UIImage(contentsOfFile: imagePath.path) ?? #imageLiteral(resourceName: "VirtualTourist_76.png")
-//        self.photoImageView.heroID = String(imagePath.path)
-//        print(String(self.photoImageView.heroID ?? ""))
+        self.photoImageView.image = UIImage(contentsOfFile: imagePath.path)
     }
     
     override func awakeFromNib() {
