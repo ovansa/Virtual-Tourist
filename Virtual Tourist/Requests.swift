@@ -35,14 +35,14 @@ class Requests {
         let request = URLRequest(url: urlString.url!)
         
         session.dataTask(with: request) { (data, response, error) in
-//            if let response = response {
-////                print(response)
-//            }
+            //            if let response = response {
+            ////                print(response)
+            //            }
             // Implement timeouts
             if let data = data {
                 
                 do {
-//                    print(try? JSONSerialization.jsonObject(with: data, options: []))
+                    //                    print(try? JSONSerialization.jsonObject(with: data, options: []))
                     let photoData = try JSONDecoder().decode(PhotosBody.self, from: data)
                     let photos = photoData.photos.photo
                     DispatchQueue.main.async {
@@ -59,6 +59,12 @@ class Requests {
         guard let url = URL(string: link) else { return }
         
         session.dataTask(with: url) { (data, response, error) in
+            if let error = error {
+                print("-----Printing error-------")
+                // Handle requests timeouts
+                print(error)
+            }
+            
             guard let data = data,
                 let image = UIImage(data: data)
                 else { return }
@@ -92,6 +98,9 @@ class Requests {
             
             let result = theSavedImages.filter{$0.name == val}
             
+//            print("--------Printing images from storage------------")
+//            print(result[0].imageList!)
+            
             images(result[0].imageList!)
             
         } catch {}
@@ -118,7 +127,7 @@ class Requests {
         do {
             let result = try Persistence.context.fetch(fetchImages)
             if result.count != 0 {
-//                print("There are some results")
+                //                print("There are some results")
                 print(result[0].imageList!)
                 result[0].setValue(images, forKey: "imageList")
                 print("------- After replacing image -------")
@@ -128,14 +137,44 @@ class Requests {
                 print("No result")
             }
         } catch { }
+        
+        do {
+            try Persistence.context.save()
+        } catch {
+            print("\(error)")
+        }
     }
     
     func deleteLocationData() {
         let fetchRequest: NSFetchRequest<NSFetchRequestResult> = NSFetchRequest(entityName: "Images")
         let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
-
+        
         do {
             try Persistence.context.execute(deleteRequest)
         } catch { }
+    }
+    
+    func updateGallery(with name: String, images: [String]) {
+        let fetchImages: NSFetchRequest<Images> = Images.fetchRequest()
+        fetchImages.predicate = NSPredicate(format: "name = %@", name)
+        
+        do {
+            let result = try Persistence.context.fetch(fetchImages)
+            if result.count != 0 {
+//                print(result[0].imageList!)
+                result[0].setValue(images, forKey: "imageList")
+//                print("------- After replacing image -------")
+//                print(result[0].imageList!)
+                
+            } else {
+                print("No result")
+            }
+        } catch { }
+        
+        do {
+            try Persistence.context.save()
+        } catch {
+            print("\(error)")
+        }
     }
 }

@@ -36,13 +36,26 @@ class MapScreen: UIViewController {
         let centerLocationIsAvailable = defaults.object(forKey: "centeredLatitude") != nil && defaults.object(forKey: "centeredLatitude") != nil
         displaySavedLocations(centerLocationIsAvailable)
         
-        //        let centerLocation = CLLocation(latitude: 6.621190, longitude: 3.284210
-        //        )
-        //        self.centerViewOnLocation(location: centerLocation)
-        //        let zoomRange = MKMapView.CameraZoomRange(maxCenterCoordinateDistance: 200000)
-        //        self.mapView.setCameraZoomRange(zoomRange, animated: true)
+        //                let centerLocation = CLLocation(latitude: 6.621190, longitude: 3.284210
+        //                )
+        //                self.centerViewOnLocation(location: centerLocation)
+        //                let zoomRange = MKMapView.CameraZoomRange(maxCenterCoordinateDistance: 200000)
+        //                self.mapView.setCameraZoomRange(zoomRange, animated: true)
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(true)
+        self.mapView.delegate = self
+        self.mapView.mapType = .standard
+        
+        configureNavBar()
+        addPinOnMapGesture()
+        
+        previousLocation = getCenterLocation(for: mapView)
+        
+        let centerLocationIsAvailable = defaults.object(forKey: "centeredLatitude") != nil && defaults.object(forKey: "centeredLatitude") != nil
+        displaySavedLocations(centerLocationIsAvailable)
+    }
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         let annotation = sender as! MKAnnotationView
         
@@ -82,8 +95,6 @@ class MapScreen: UIViewController {
                 anotation2.coordinate = CLLocationCoordinate2D(latitude: 27.175014, longitude: 78.042152)
                 self.mapView.addAnnotation(anotation2)
                 
-                
-                
                 if centerLocationIsAvailable {
                     let centerLocation = CLLocation(latitude: self.defaults.double(forKey: "centeredLatitude"), longitude: self.defaults.double(forKey: "centeredLongitude"))
                     self.saveLocation(latitude: self.defaults.double(forKey: "centeredLatitude"), longitude: self.defaults.double(forKey: "centeredLongitude")
@@ -117,6 +128,7 @@ class MapScreen: UIViewController {
     
     func saveLocation(latitude: Double, longitude: Double) {
         let location = Locations(context: Persistence.context)
+        location.longLat = String(latitude) + String(longitude)
         location.latitude = latitude
         location.longitude = longitude
         Persistence.saveContext()
@@ -130,6 +142,7 @@ class MapScreen: UIViewController {
             let saved = try Persistence.context.fetch(savedLocationData)
             savedLocations = saved
             locations(savedLocations)
+//            print(savedLocations)
         } catch{}
     }
     

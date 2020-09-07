@@ -33,14 +33,82 @@ class PhotoAlbum: UIViewController {
     
     var defaultNoOfPictures: Int = 40
     
+    func updateGallery(with name: String, images: [String]) {
+            let fetchImages: NSFetchRequest<Images> = Images.fetchRequest()
+            fetchImages.predicate = NSPredicate(format: "name = %@", name)
+            
+            do {
+                let result = try Persistence.context.fetch(fetchImages)
+                if result.count != 0 {
+    //                print(result[0].imageList!)
+                    result[0].setValue(images, forKey: "imageList")
+    //                print("------- After replacing image -------")
+    //                print(result[0].imageList!)
+                    
+                } else {
+                    print("No result")
+                }
+            } catch { }
+            
+            do {
+                try Persistence.context.save()
+            } catch {
+                print("\(error)")
+            }
+        }
     
     @IBAction func deleteButtonPressed(_ sender: UIButton) {
-        print("Delete is pressed")
+        let longitude = annotationSegue.annotation!.coordinate.longitude
+        let latitude = annotationSegue.annotation!.coordinate.latitude
+        let longLat = String(latitude) + String(longitude)
+        
+        let fetchPoint: NSFetchRequest<Locations> = Locations.fetchRequest()
+        fetchPoint.predicate = NSPredicate(format: "longLat = %@", longLat)
+        
+        // Delete location from Location data
+        do {
+            let result = try Persistence.context.fetch(fetchPoint)
+//            print(result[0].longLat!)
+            if result.count > 0 {
+                Persistence.context.delete(result[0])
+            }
+            do {
+                try Persistence.context.save()
+            } catch {
+                print("\(error)")
+            }
+        } catch { }
+        
+        // Delete images of location from Images data
+        let fetchImages: NSFetchRequest<Images> = Images.fetchRequest()
+        fetchImages.predicate = NSPredicate(format: "name = %@", longLat)
+        
+        // Delete location from Location data
+        do {
+            let results = try Persistence.context.fetch(fetchImages)
+            
+            if results.count > 0 {
+                print(results[0].name!)
+                Persistence.context.delete(results[0])
+            }
+            do {
+                try Persistence.context.save()
+            } catch {
+                print("\(error)")
+            }
+        } catch { }
+        
+        // Delete location from Location data
+        // Delete images of location from Images data
+        // Delete the images from devices
+        
+        
+        let vc = storyboard?.instantiateViewController(identifier: "MapScreen") as? MapScreen
+        self.navigationController?.pushViewController(vc!, animated: true)
     }
     
     @IBAction func backButtonPressed(_ sender: Any) {
         _ = navigationController?.popViewController(animated: true)
-        print("Back is pressed")
     }
     
     @IBAction func refreshButtonPressed(_ sender: UIButton) {
@@ -52,8 +120,7 @@ class PhotoAlbum: UIViewController {
         let latitude = annotationSegue.annotation!.coordinate.latitude
         
         self.refreshButton.isEnabled = false
-        print("Fetching new image")
-        self.collectionView.showLoader()
+        self.collectionView.showLoader(message: "Refreshing...")
         
         Requests.shared.getImageDataFromLocation(lat: latitude, lon: longitude) { (response) in
             if response.count == 0 {
@@ -67,10 +134,6 @@ class PhotoAlbum: UIViewController {
                         Requests.shared.updateSavedGallery(with: self.longLat, images: pictures) { (updatedImages) in
                             self.savedImages = updatedImages
                             self.refreshButton.isEnabled = true
-                            
-                            print("Image have been saved to cache1")
-                            print(updatedImages)
-                            
                             self.collectionView.reloadData()
                             self.collectionView.hideLoader()
                         }
@@ -83,9 +146,6 @@ class PhotoAlbum: UIViewController {
                         Requests.shared.updateSavedGallery(with: self.longLat, images: pictures) { (updatedImages) in
                             self.savedImages = updatedImages
                             self.refreshButton.isEnabled = true
-                            
-                            print("Image have been saved to cache1")
-                            print(updatedImages)
                             self.collectionView.reloadData()
                             self.collectionView.hideLoader()
                         }
@@ -110,6 +170,7 @@ class PhotoAlbum: UIViewController {
         
         deleteButton.layer.cornerRadius = deleteButton.frame.size.height / 2
         
+        
         let anotation = MKPointAnnotation()
         let longitude = annotationSegue.annotation!.coordinate.longitude
         let latitude = annotationSegue.annotation!.coordinate.latitude
@@ -132,7 +193,7 @@ class PhotoAlbum: UIViewController {
     }
     
     fileprivate func fetchImagesFromStorage() {
-        self.collectionView.showLoader()
+        self.collectionView.showLoader(message: "")
         Requests.shared.getImagesFromStorage(basedOn: self.longLat) { (images) in
             self.savedImages = images
             self.refreshButton.isEnabled = true
@@ -160,14 +221,13 @@ class PhotoAlbum: UIViewController {
     fileprivate func setEmptyStateForNoImage() {
         self.refreshButton.isEnabled = true
         self.collectionView.setEmptyMessage("There is no image for this location :(")
-        print("There is no image for this location")
     }
     
     fileprivate func makeFreshRequestForImages() {
         let longitude = annotationSegue.annotation!.coordinate.longitude
         let latitude = annotationSegue.annotation!.coordinate.latitude
         
-        self.collectionView.showLoader()
+        self.collectionView.showLoader(message: "Fetching...")
         
         Requests.shared.getImageDataFromLocation(lat: latitude, lon: longitude) { (response) in
             if response.count == 0 {
@@ -184,12 +244,15 @@ class PhotoAlbum: UIViewController {
                         let images = Images(context: Persistence.context)
                         images.name = self.longLat
                         images.imageList = pictures
-                        Persistence.saveContext()
+                        
+                        do {
+                            try Persistence.context.save()
+                        } catch {
+                            print("\(error)")
+                        }
+                        
                         self.savedImages = pictures
                         self.refreshButton.isEnabled = true
-                        
-                        print("Image have been saved to cache1")
-                        print(pictures)
                         self.collectionView.reloadData()
                         self.collectionView.hideLoader()
                     }
@@ -200,12 +263,13 @@ class PhotoAlbum: UIViewController {
                         let images = Images(context: Persistence.context)
                         images.name = self.longLat
                         images.imageList = pictures
-                        Persistence.saveContext()
+                        do {
+                            try Persistence.context.save()
+                        } catch {
+                            print("\(error)")
+                        }
                         self.savedImages = pictures
                         self.refreshButton.isEnabled = true
-                        
-                        print("Image have been saved to cache2")
-                        print(pictures)
                         self.collectionView.reloadData()
                         self.collectionView.hideLoader()
                     }
@@ -247,6 +311,21 @@ class PhotoAlbum: UIViewController {
             }
         }
         return imgName
+    }
+    
+    func deleteImageFromDirectory(imageName img: String) {
+        let document = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+        
+        let imagePath = document.appendingPathComponent(img)
+        
+        let fileManager = FileManager.default
+        try? fileManager.removeItem(atPath: imagePath.path)
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(true)
+        fetchImage()
+        collectionView.reloadData()
     }
     
     override func viewWillLayoutSubviews() {
@@ -292,49 +371,25 @@ class PhotoAlbum: UIViewController {
 
 extension PhotoAlbum: UICollectionViewDelegate, UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        //        if isImage == false {
-        //            return savedImages.count
-        //        } else {
-        //            return photos.count
-        //        }
-        
         return savedImages.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: photoIdentifier, for: indexPath) as! PhotoCell
-        //        if isImage == false {
-        //            cell.configures(image: savedImages[indexPath.item])
-        //            print("Cofiguring from local storage")
-        //        } else {
-        //            cell.configure(photo: photos[indexPath.item])
-        //            print("Cofiguring from internat image")
-        //        }
         
         cell.configures(image: savedImages[indexPath.item])
         
         return cell
     }
     
-    fileprivate func deleteAPicture(_ collectionView: UICollectionView, _ indexPath: IndexPath) {
-        collectionView.deleteItems(at: [indexPath])
-        savedImages.remove(at: indexPath.item)
-        Requests.shared.updateSavedGallery(with: self.longLat, images: savedImages) { (updatedList) in
-            self.savedImages = updatedList
-            self.collectionView.reloadData()
-        }
-    }
-    
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-//        deleteAPicture(collectionView, indexPath)
-        
         let image = savedImages[indexPath.item]
-        print(image)
-        
         let vc = storyboard?.instantiateViewController(identifier: "DetailImageViewController") as? DetailImageViewController
-        
+
         vc?.imageName = image
-        
+        vc?.longLat = self.longLat
+        vc?.index = indexPath.item
+
         self.navigationController?.pushViewController(vc!, animated: true)
     }
 }
@@ -357,11 +412,10 @@ extension UICollectionView {
         self.backgroundView = nil
     }
     
-    func showLoader() {
+    func showLoader(message msg: String?) {
         let Indicator = MBProgressHUD.showAdded(to: self, animated: true)
-//        Indicator.label.text = "Indicator"
         Indicator.isUserInteractionEnabled = false
-//        Indicator.detailsLabel.text = "fetching details"
+        Indicator.detailsLabel.text = msg
         Indicator.show(animated: true)
     }
     

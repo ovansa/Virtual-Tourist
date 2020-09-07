@@ -7,9 +7,10 @@
     <entity name="Locations" representedClassName="Locations" syncable="YES">
         <attribute name="latitude" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="longitude" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="longLat" optional="YES" attributeType="String"/>
     </entity>
     <elements>
         <element name="Images" positionX="-63" positionY="-18" width="128" height="73"/>
-        <element name="Locations" positionX="-54" positionY="9" width="128" height="73"/>
+        <element name="Locations" positionX="-54" positionY="9" width="128" height="88"/>
     </elements>
 </model>

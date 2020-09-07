@@ -11,7 +11,7 @@
         <!--Map Screen-->
         <scene sceneID="2uX-29-w28">
             <objects>
-                <viewController id="AcN-20-3Uw" customClass="MapScreen" customModule="Virtual_Tourist" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="MapScreen" id="AcN-20-3Uw" customClass="MapScreen" customModule="Virtual_Tourist" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Qv4-ek-XEf">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -167,11 +167,12 @@
                             <constraint firstItem="CGB-4P-yUu" firstAttribute="trailing" secondItem="8Fl-Hr-snV" secondAttribute="trailing" id="qtb-o3-Vx6"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="8Fl-Hr-snV"/>
+                        <userDefinedRuntimeAttributes>
+                            <userDefinedRuntimeAttribute type="boolean" keyPath="bottomLeft" value="YES"/>
+                            <userDefinedRuntimeAttribute type="boolean" keyPath="bottomRight" value="YES"/>
+                        </userDefinedRuntimeAttributes>
                     </view>
                     <navigationItem key="navigationItem" largeTitleDisplayMode="never" id="3F7-jC-b0f"/>
-                    <userDefinedRuntimeAttributes>
-                        <userDefinedRuntimeAttribute type="boolean" keyPath="isHeroEnabled" value="YES"/>
-                    </userDefinedRuntimeAttributes>
                     <connections>
                         <outlet property="albumMapView" destination="cV7-E3-Yc7" id="VW7-Cx-Re1"/>
                         <outlet property="backButton" destination="DdS-gd-fn7" id="tal-me-Tbe"/>
@@ -246,9 +247,6 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="CQu-6G-1cx"/>
                     </view>
-                    <userDefinedRuntimeAttributes>
-                        <userDefinedRuntimeAttribute type="boolean" keyPath="isHeroEnabled" value="YES"/>
-                    </userDefinedRuntimeAttributes>
                     <connections>
                         <outlet property="backButton" destination="Zz6-7Y-ccr" id="xTd-Ph-J6u"/>
                         <outlet property="deletePictureButton" destination="D91-tb-f1Y" id="Grl-rx-NVv"/>
