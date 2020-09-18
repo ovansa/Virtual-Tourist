@@ -58,53 +58,54 @@ class PhotoAlbum: UIViewController {
         }
     
     @IBAction func deleteButtonPressed(_ sender: UIButton) {
-        let longitude = annotationSegue.annotation!.coordinate.longitude
-        let latitude = annotationSegue.annotation!.coordinate.latitude
-        let longLat = String(latitude) + String(longitude)
+        let deleteAlert = UIAlertController(title: "Confirm delete?", message: "Location will be deleted", preferredStyle: UIAlertController.Style.alert)
         
-        let fetchPoint: NSFetchRequest<Locations> = Locations.fetchRequest()
-        fetchPoint.predicate = NSPredicate(format: "longLat = %@", longLat)
-        
-        // Delete location from Location data
-        do {
-            let result = try Persistence.context.fetch(fetchPoint)
-//            print(result[0].longLat!)
-            if result.count > 0 {
-                Persistence.context.delete(result[0])
-            }
-            do {
-                try Persistence.context.save()
-            } catch {
-                print("\(error)")
-            }
-        } catch { }
-        
-        // Delete images of location from Images data
-        let fetchImages: NSFetchRequest<Images> = Images.fetchRequest()
-        fetchImages.predicate = NSPredicate(format: "name = %@", longLat)
-        
-        // Delete location from Location data
-        do {
-            let results = try Persistence.context.fetch(fetchImages)
+        deleteAlert.addAction(UIAlertAction(title: "OK", style: .default, handler: { (action: UIAlertAction!) in
+            let longitude = self.annotationSegue.annotation!.coordinate.longitude
+            let latitude = self.annotationSegue.annotation!.coordinate.latitude
+            let longLat = String(latitude) + String(longitude)
             
-            if results.count > 0 {
-                print(results[0].name!)
-                Persistence.context.delete(results[0])
-            }
+            let fetchPoint: NSFetchRequest<Locations> = Locations.fetchRequest()
+            fetchPoint.predicate = NSPredicate(format: "longLat = %@", longLat)
+            
+            // Delete location from Location data
             do {
-                try Persistence.context.save()
-            } catch {
-                print("\(error)")
-            }
-        } catch { }
+                let result = try Persistence.context.fetch(fetchPoint)
+                
+                Persistence.context.delete(result[0])
+                do {
+                    try Persistence.context.save()
+                } catch {
+                    print("\(error)")
+                }
+            } catch { }
+            
+            // Delete images of location from Images data
+            let fetchImages: NSFetchRequest<Images> = Images.fetchRequest()
+            fetchImages.predicate = NSPredicate(format: "name = %@", longLat)
+            
+            // Delete location from Location data
+            do {
+                let results = try Persistence.context.fetch(fetchImages)
+                
+                if results.count > 0 {
+                    print(results[0].name!)
+                    Persistence.context.delete(results[0])
+                }
+                do {
+                    try Persistence.context.save()
+                } catch {
+                    print("\(error)")
+                }
+            } catch { }
+            
+            let vc = self.storyboard?.instantiateViewController(identifier: "MapScreen") as? MapScreen
+            self.navigationController?.pushViewController(vc!, animated: true)
+        }))
         
-        // Delete location from Location data
-        // Delete images of location from Images data
-        // Delete the images from devices
+        deleteAlert.addAction(UIAlertAction(title: "Cancel", style: .default, handler: nil))
         
-        
-        let vc = storyboard?.instantiateViewController(identifier: "MapScreen") as? MapScreen
-        self.navigationController?.pushViewController(vc!, animated: true)
+        present(deleteAlert, animated: true, completion: nil)
     }
     
     @IBAction func backButtonPressed(_ sender: Any) {

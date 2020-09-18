@@ -31,16 +31,20 @@ class MapScreen: UIViewController {
         configureNavBar()
         addPinOnMapGesture()
         
+        self.mapView.delegate = self
+        self.mapView.mapType = .standard
+        
+        configureNavBar()
+        addPinOnMapGesture()
+        
         previousLocation = getCenterLocation(for: mapView)
         
-        let centerLocationIsAvailable = defaults.object(forKey: "centeredLatitude") != nil && defaults.object(forKey: "centeredLatitude") != nil
-        displaySavedLocations(centerLocationIsAvailable)
+        print(self.defaults.double(forKey: "deltaLat"))
+        print(self.defaults.double(forKey: "deltaLong"))
         
-        //                let centerLocation = CLLocation(latitude: 6.621190, longitude: 3.284210
-        //                )
-        //                self.centerViewOnLocation(location: centerLocation)
-        //                let zoomRange = MKMapView.CameraZoomRange(maxCenterCoordinateDistance: 200000)
-        //                self.mapView.setCameraZoomRange(zoomRange, animated: true)
+        let centerLocationIsAvailable = defaults.object(forKey: "centeredLatitude") != nil && defaults.object(forKey: "centeredLatitude") != nil
+        print(centerLocationIsAvailable)
+        displaySavedLocations(centerLocationIsAvailable)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -54,8 +58,10 @@ class MapScreen: UIViewController {
         previousLocation = getCenterLocation(for: mapView)
         
         let centerLocationIsAvailable = defaults.object(forKey: "centeredLatitude") != nil && defaults.object(forKey: "centeredLatitude") != nil
+        print(centerLocationIsAvailable)
         displaySavedLocations(centerLocationIsAvailable)
     }
+    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         let annotation = sender as! MKAnnotationView
         
@@ -89,22 +95,32 @@ class MapScreen: UIViewController {
                 anotation1.title = "Eiffel Tower"
                 anotation1.coordinate = CLLocationCoordinate2D(latitude: 48.858372, longitude: 2.294481)
                 
-                self.mapView.addAnnotation(anotation1)
-                let anotation2 = MKPointAnnotation()
-                anotation2.title = "Kilimanjaro"
-                anotation2.coordinate = CLLocationCoordinate2D(latitude: 27.175014, longitude: 78.042152)
-                self.mapView.addAnnotation(anotation2)
-                
                 if centerLocationIsAvailable {
                     let centerLocation = CLLocation(latitude: self.defaults.double(forKey: "centeredLatitude"), longitude: self.defaults.double(forKey: "centeredLongitude"))
+                    let centerAnnotation = MKPointAnnotation()
+                    centerAnnotation.coordinate = CLLocationCoordinate2D(latitude: centerLocation.coordinate.latitude, longitude: centerLocation.coordinate.longitude)
+                    
+                    let span = MKCoordinateSpan(latitudeDelta: self.defaults.double(forKey: "deltaLat"), longitudeDelta: self.defaults.double(forKey: "deltaLong"))
+                    
+                    print(self.defaults.double(forKey: "deltaLat"))
+                    print(self.defaults.double(forKey: "deltaLong"))
+                    let mapRegion = MKCoordinateRegion(center: centerAnnotation.coordinate, span: span)
+                    
                     self.saveLocation(latitude: self.defaults.double(forKey: "centeredLatitude"), longitude: self.defaults.double(forKey: "centeredLongitude")
                     )
                     self.centerViewOnLocation(location: centerLocation)
+                    self.mapView.addAnnotation(centerAnnotation)
+                    self.mapView.setRegion(mapRegion, animated: true)
+                    
+                    print("Showing the location")
                 } else {
                     let centerLocation = CLLocation(latitude: 48.858372, longitude: 2.294481)
-                    self.saveLocation(latitude: self.defaults.double(forKey: "centeredLatitude"), longitude: self.defaults.double(forKey: "centeredLongitude")
-                    )
+                    let centerAnnotation = MKPointAnnotation()
+                    centerAnnotation.coordinate = CLLocationCoordinate2D(latitude: centerLocation.coordinate.latitude, longitude: centerLocation.coordinate.longitude)
+                    self.saveLocation(latitude: centerLocation.coordinate.latitude, longitude: centerLocation.coordinate.longitude)
                     self.centerViewOnLocation(location: centerLocation)
+                    self.mapView.addAnnotation(centerAnnotation)
+                    print("Showing the location when empty")
                 }
                 
                 
@@ -142,7 +158,7 @@ class MapScreen: UIViewController {
             let saved = try Persistence.context.fetch(savedLocationData)
             savedLocations = saved
             locations(savedLocations)
-//            print(savedLocations)
+            //            print(savedLocations)
         } catch{}
     }
     
@@ -161,19 +177,31 @@ class MapScreen: UIViewController {
         }
     }
     
-    func centerViewOnUserLocation() {
-        if let location = locationManager.location?.coordinate {
-            let region = MKCoordinateRegion.init(center: location, latitudinalMeters: 5000, longitudinalMeters: 100)
-            mapView.setRegion(region, animated: true)
-        }
-    }
+//    func centerViewOnUserLocation() {
+//        if let location = locationManager.location?.coordinate {
+//            let span = MKCoordinateSpan(latitudeDelta: self.defaults.double(forKey: "deltaLat"), longitudeDelta: self.defaults.double(forKey: "deltaLong"))
+//
+//            print(self.defaults.double(forKey: "deltaLat"))
+//            print(self.defaults.double(forKey: "deltaLong"))
+//            let mapRegion = MKCoordinateRegion(center: location, span: span)
+//
+////            let region = MKCoordinateRegion.init(center: location, latitudinalMeters: 5000, longitudinalMeters: 100)
+//            mapView.setRegion(mapRegion, animated: true)
+//        }
+//    }
     
     func centerViewOnLocation(location: CLLocation) {
-        let coordinateRegion = MKCoordinateRegion(center: location.coordinate, latitudinalMeters: 50000, longitudinalMeters: 50000
-        )
+//        let coordinateRegion = MKCoordinateRegion(center: location.coordinate, latitudinalMeters: 50000, longitudinalMeters: 50000
+//        )
+        
+        let span = MKCoordinateSpan(latitudeDelta: self.defaults.double(forKey: "deltaLat"), longitudeDelta: self.defaults.double(forKey: "deltaLong"))
+        
+        print(self.defaults.double(forKey: "deltaLat"))
+        print(self.defaults.double(forKey: "deltaLong"))
+        let mapRegion = MKCoordinateRegion(center: location.coordinate, span: span)
         
         //        let sm = MKCoordinateRegion(center: location, span: <#T##MKCoordinateSpan#>)
-        mapView.setRegion(coordinateRegion, animated: true)
+        mapView.setRegion(mapRegion, animated: true)
     }
     
     func setUPLocationManager() {
@@ -233,8 +261,16 @@ extension MapScreen: CLLocationManagerDelegate, MKMapViewDelegate {
     func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
         centerOfMapView = mapView.centerCoordinate
         //        let some = mapView.region.span.latitudeDelt
+        let deltaLat = mapView.region.span.latitudeDelta
+        let deltaLong = mapView.region.span.longitudeDelta
+        
+        print(deltaLat)
+        print(deltaLong)
+        
         defaults.set(centerOfMapView.latitude, forKey: "centeredLatitude")
         defaults.set(centerOfMapView.longitude, forKey: "centeredLongitude")
+        defaults.set(deltaLat, forKey: "deltaLat")
+        defaults.set(deltaLong, forKey: "deltaLong")
         
         let center = getCenterLocation(for: mapView)
         let geoCoder = CLGeocoder()
