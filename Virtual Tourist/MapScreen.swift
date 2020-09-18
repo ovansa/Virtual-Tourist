@@ -191,17 +191,20 @@ class MapScreen: UIViewController {
 //    }
     
     func centerViewOnLocation(location: CLLocation) {
-//        let coordinateRegion = MKCoordinateRegion(center: location.coordinate, latitudinalMeters: 50000, longitudinalMeters: 50000
-//        )
-        
-        let span = MKCoordinateSpan(latitudeDelta: self.defaults.double(forKey: "deltaLat"), longitudeDelta: self.defaults.double(forKey: "deltaLong"))
-        
-        print(self.defaults.double(forKey: "deltaLat"))
-        print(self.defaults.double(forKey: "deltaLong"))
-        let mapRegion = MKCoordinateRegion(center: location.coordinate, span: span)
-        
-        //        let sm = MKCoordinateRegion(center: location, span: <#T##MKCoordinateSpan#>)
-        mapView.setRegion(mapRegion, animated: true)
+        if self.defaults.object(forKey: "deltaLat") != nil {
+            let span = MKCoordinateSpan(latitudeDelta: self.defaults.double(forKey: "deltaLat"), longitudeDelta: self.defaults.double(forKey: "deltaLong"))
+            
+            print(self.defaults.double(forKey: "deltaLat"))
+            print(self.defaults.double(forKey: "deltaLong"))
+            let mapRegion = MKCoordinateRegion(center: location.coordinate, span: span)
+            mapView.setRegion(mapRegion, animated: true)
+        } else {
+            print(self.defaults.double(forKey: "deltaLat"))
+            print(self.defaults.double(forKey: "deltaLong"))
+            let mapRegion = MKCoordinateRegion(center: location.coordinate, latitudinalMeters: 1000, longitudinalMeters: 1000)
+            
+            mapView.setRegion(mapRegion, animated: true)
+        }
     }
     
     func setUPLocationManager() {

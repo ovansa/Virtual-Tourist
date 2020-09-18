@@ -121,6 +121,7 @@ class PhotoAlbum: UIViewController {
         let latitude = annotationSegue.annotation!.coordinate.latitude
         
         self.refreshButton.isEnabled = false
+        self.deleteButton.isEnabled = false
         self.collectionView.showLoader(message: "Refreshing...")
         
         Requests.shared.getImageDataFromLocation(lat: latitude, lon: longitude) { (response) in
@@ -135,6 +136,7 @@ class PhotoAlbum: UIViewController {
                         Requests.shared.updateSavedGallery(with: self.longLat, images: pictures) { (updatedImages) in
                             self.savedImages = updatedImages
                             self.refreshButton.isEnabled = true
+                            self.deleteButton.isEnabled = true
                             self.collectionView.reloadData()
                             self.collectionView.hideLoader()
                         }
@@ -147,6 +149,7 @@ class PhotoAlbum: UIViewController {
                         Requests.shared.updateSavedGallery(with: self.longLat, images: pictures) { (updatedImages) in
                             self.savedImages = updatedImages
                             self.refreshButton.isEnabled = true
+                            self.deleteButton.isEnabled = true
                             self.collectionView.reloadData()
                             self.collectionView.hideLoader()
                         }
@@ -198,6 +201,7 @@ class PhotoAlbum: UIViewController {
         Requests.shared.getImagesFromStorage(basedOn: self.longLat) { (images) in
             self.savedImages = images
             self.refreshButton.isEnabled = true
+            self.deleteButton.isEnabled = true
             self.collectionView.hideLoader()
         }
     }
@@ -221,6 +225,7 @@ class PhotoAlbum: UIViewController {
     
     fileprivate func setEmptyStateForNoImage() {
         self.refreshButton.isEnabled = true
+        self.deleteButton.isEnabled = true
         self.collectionView.setEmptyMessage("There is no image for this location :(")
     }
     
@@ -254,6 +259,7 @@ class PhotoAlbum: UIViewController {
                         
                         self.savedImages = pictures
                         self.refreshButton.isEnabled = true
+                        self.deleteButton.isEnabled = true
                         self.collectionView.reloadData()
                         self.collectionView.hideLoader()
                     }
@@ -271,6 +277,7 @@ class PhotoAlbum: UIViewController {
                         }
                         self.savedImages = pictures
                         self.refreshButton.isEnabled = true
+                        self.deleteButton.isEnabled = true
                         self.collectionView.reloadData()
                         self.collectionView.hideLoader()
                     }
