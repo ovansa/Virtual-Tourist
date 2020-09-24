@@ -24,6 +24,11 @@ class PhotoCell: UICollectionViewCell {
         self.photoImageView.image = UIImage(contentsOfFile: imagePath.path)
     }
     
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        self.photoImageView.image = #imageLiteral(resourceName: "VirtualTourist_120")
+    }
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
