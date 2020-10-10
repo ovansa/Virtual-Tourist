@@ -35,14 +35,8 @@ class Requests {
         let request = URLRequest(url: urlString.url!)
         
         session.dataTask(with: request) { (data, response, error) in
-            //            if let response = response {
-            ////                print(response)
-            //            }
-            // Implement timeouts
             if let data = data {
-                
                 do {
-                    //                    print(try? JSONSerialization.jsonObject(with: data, options: []))
                     let photoData = try JSONDecoder().decode(PhotosBody.self, from: data)
                     let photos = photoData.photos.photo
                     DispatchQueue.main.async {

@@ -31,11 +31,8 @@ class MapScreen: UIViewController {
         configureNavBar()
         addPinOnMapGesture()
         
-        self.mapView.delegate = self
-        self.mapView.mapType = .standard
         
-        configureNavBar()
-        addPinOnMapGesture()
+        
         
         previousLocation = getCenterLocation(for: mapView)
         
@@ -47,20 +44,20 @@ class MapScreen: UIViewController {
         displaySavedLocations(centerLocationIsAvailable)
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(true)
-        self.mapView.delegate = self
-        self.mapView.mapType = .standard
-        
-        configureNavBar()
-        addPinOnMapGesture()
-        
-        previousLocation = getCenterLocation(for: mapView)
-        
-        let centerLocationIsAvailable = defaults.object(forKey: "centeredLatitude") != nil && defaults.object(forKey: "centeredLatitude") != nil
-        print(centerLocationIsAvailable)
-        displaySavedLocations(centerLocationIsAvailable)
-    }
+    //    override func viewWillAppear(_ animated: Bool) {
+    //        super.viewWillAppear(true)
+    //        self.mapView.delegate = self
+    //        self.mapView.mapType = .standard
+    //
+    //        configureNavBar()
+    //        addPinOnMapGesture()
+    //
+    //        previousLocation = getCenterLocation(for: mapView)
+    //
+    //        let centerLocationIsAvailable = defaults.object(forKey: "centeredLatitude") != nil && defaults.object(forKey: "centeredLatitude") != nil
+    //        print(centerLocationIsAvailable)
+    //        displaySavedLocations(centerLocationIsAvailable)
+    //    }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         let annotation = sender as! MKAnnotationView
@@ -90,11 +87,8 @@ class MapScreen: UIViewController {
     
     fileprivate func displaySavedLocations(_ centerLocationIsAvailable: Bool) {
         getLocations { (locations) in
-            if locations.isEmpty {
-                let anotation1 = MKPointAnnotation()
-                anotation1.title = "Eiffel Tower"
-                anotation1.coordinate = CLLocationCoordinate2D(latitude: 48.858372, longitude: 2.294481)
-                
+            // Checks if there is no location saved (For running the app for the first time)
+            if locations.count == 0 {
                 if centerLocationIsAvailable {
                     let centerLocation = CLLocation(latitude: self.defaults.double(forKey: "centeredLatitude"), longitude: self.defaults.double(forKey: "centeredLongitude"))
                     let centerAnnotation = MKPointAnnotation()
@@ -102,8 +96,6 @@ class MapScreen: UIViewController {
                     
                     let span = MKCoordinateSpan(latitudeDelta: self.defaults.double(forKey: "deltaLat"), longitudeDelta: self.defaults.double(forKey: "deltaLong"))
                     
-                    print(self.defaults.double(forKey: "deltaLat"))
-                    print(self.defaults.double(forKey: "deltaLong"))
                     let mapRegion = MKCoordinateRegion(center: centerAnnotation.coordinate, span: span)
                     
                     self.saveLocation(latitude: self.defaults.double(forKey: "centeredLatitude"), longitude: self.defaults.double(forKey: "centeredLongitude")
@@ -114,19 +106,15 @@ class MapScreen: UIViewController {
                     
                     print("Showing the location")
                 } else {
+                    // This shows a defalt location on launching the app for the first time. Would have fetched the current user location but there was an issue fetching user's location on a simulator
                     let centerLocation = CLLocation(latitude: 48.858372, longitude: 2.294481)
                     let centerAnnotation = MKPointAnnotation()
                     centerAnnotation.coordinate = CLLocationCoordinate2D(latitude: centerLocation.coordinate.latitude, longitude: centerLocation.coordinate.longitude)
                     self.saveLocation(latitude: centerLocation.coordinate.latitude, longitude: centerLocation.coordinate.longitude)
                     self.centerViewOnLocation(location: centerLocation)
-                    self.mapView.addAnnotation(centerAnnotation)
+                    //                    self.mapView.addAnnotation(centerAnnotation)
                     print("Showing the location when empty")
                 }
-                
-                
-                let zoomRange = MKMapView.CameraZoomRange(maxCenterCoordinateDistance: 200000)
-                self.mapView.setCameraZoomRange(zoomRange, animated: true)
-                
             } else {
                 for location in locations {
                     let annotation = MKPointAnnotation()
@@ -135,10 +123,10 @@ class MapScreen: UIViewController {
                 }
                 let centerLocation = CLLocation(latitude: self.defaults.double(forKey: "centeredLatitude"), longitude: self.defaults.double(forKey: "centeredLongitude"))
                 self.centerViewOnLocation(location: centerLocation)
-                
-                let zoomRange = MKMapView.CameraZoomRange(maxCenterCoordinateDistance: 200000)
-                self.mapView.setCameraZoomRange(zoomRange, animated: true)
             }
+            
+            let zoomRange = MKMapView.CameraZoomRange(maxCenterCoordinateDistance: 200000)
+            self.mapView.setCameraZoomRange(zoomRange, animated: true)
         }
     }
     
@@ -177,18 +165,18 @@ class MapScreen: UIViewController {
         }
     }
     
-//    func centerViewOnUserLocation() {
-//        if let location = locationManager.location?.coordinate {
-//            let span = MKCoordinateSpan(latitudeDelta: self.defaults.double(forKey: "deltaLat"), longitudeDelta: self.defaults.double(forKey: "deltaLong"))
-//
-//            print(self.defaults.double(forKey: "deltaLat"))
-//            print(self.defaults.double(forKey: "deltaLong"))
-//            let mapRegion = MKCoordinateRegion(center: location, span: span)
-//
-////            let region = MKCoordinateRegion.init(center: location, latitudinalMeters: 5000, longitudinalMeters: 100)
-//            mapView.setRegion(mapRegion, animated: true)
-//        }
-//    }
+    //    func centerViewOnUserLocation() {
+    //        if let location = locationManager.location?.coordinate {
+    //            let span = MKCoordinateSpan(latitudeDelta: self.defaults.double(forKey: "deltaLat"), longitudeDelta: self.defaults.double(forKey: "deltaLong"))
+    //
+    //            print(self.defaults.double(forKey: "deltaLat"))
+    //            print(self.defaults.double(forKey: "deltaLong"))
+    //            let mapRegion = MKCoordinateRegion(center: location, span: span)
+    //
+    ////            let region = MKCoordinateRegion.init(center: location, latitudinalMeters: 5000, longitudinalMeters: 100)
+    //            mapView.setRegion(mapRegion, animated: true)
+    //        }
+    //    }
     
     func centerViewOnLocation(location: CLLocation) {
         if self.defaults.object(forKey: "deltaLat") != nil {

@@ -166,6 +166,9 @@ class PhotoAlbum: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        self.refreshButton.isEnabled = false
+        self.deleteButton.isEnabled = false
+        
         navigationItem.hidesBackButton = true
         self.navigationController?.setNavigationBarHidden(true, animated: true)
         
@@ -422,12 +425,14 @@ extension UICollectionView {
     
     func showLoader(message msg: String?) {
         let Indicator = MBProgressHUD.showAdded(to: self, animated: true)
-        Indicator.isUserInteractionEnabled = false
+        Indicator.isUserInteractionEnabled = true
         Indicator.detailsLabel.text = msg
         Indicator.show(animated: true)
+         self.isScrollEnabled = false
     }
     
     func hideLoader() {
         MBProgressHUD.hide(for: self, animated: true)
+        self.isScrollEnabled = true
     }
 }
